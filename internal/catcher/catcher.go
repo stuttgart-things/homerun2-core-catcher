@@ -6,11 +6,16 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"time"
 
 	"github.com/redis/go-redis/v9"
 	homerun "github.com/stuttgart-things/homerun-library/v2"
+	"github.com/stuttgart-things/homerun2-core-catcher/internal/models"
 	"github.com/stuttgart-things/redisqueue"
 )
+
+// MessageHandler processes a caught message.
+type MessageHandler func(msg models.CaughtMessage)
 
 // Catcher defines the interface for message consumption backends.
 type Catcher interface {
@@ -24,10 +29,11 @@ type RedisCatcher struct {
 	consumer    *redisqueue.Consumer
 	redisClient *redis.Client
 	stream      string
+	handlers    []MessageHandler
 }
 
 // NewRedisCatcher creates a consumer connected to the given Redis stream.
-func NewRedisCatcher(rc homerun.RedisConfig, groupName, consumerName string) (*RedisCatcher, error) {
+func NewRedisCatcher(rc homerun.RedisConfig, groupName, consumerName string, handlers ...MessageHandler) (*RedisCatcher, error) {
 	if consumerName == "" {
 		hostname, _ := os.Hostname()
 		consumerName = hostname
@@ -58,6 +64,7 @@ func NewRedisCatcher(rc homerun.RedisConfig, groupName, consumerName string) (*R
 		consumer:    consumer,
 		redisClient: redisClient,
 		stream:      rc.Stream,
+		handlers:    handlers,
 	}
 
 	consumer.Register(rc.Stream, c.handleMessage)
@@ -85,11 +92,6 @@ func (c *RedisCatcher) Errors() <-chan error {
 
 // handleMessage is called for each message received from the stream.
 func (c *RedisCatcher) handleMessage(msg *redisqueue.Message) error {
-	slog.Info("message caught",
-		"stream", msg.Stream,
-		"id", msg.ID,
-	)
-
 	messageID, ok := msg.Values["messageID"]
 	if !ok {
 		slog.Warn("stream entry missing messageID field", "id", msg.ID)
@@ -102,12 +104,6 @@ func (c *RedisCatcher) handleMessage(msg *redisqueue.Message) error {
 		return nil
 	}
 
-	slog.Info("message reference",
-		"messageID", messageIDStr,
-		"stream_id", msg.ID,
-	)
-
-	// Resolve full message payload from Redis JSON
 	payload, err := c.resolveMessage(messageIDStr)
 	if err != nil {
 		slog.Warn("failed to resolve message from Redis JSON",
@@ -117,16 +113,16 @@ func (c *RedisCatcher) handleMessage(msg *redisqueue.Message) error {
 		return nil
 	}
 
-	slog.Info("message payload",
-		"messageID", messageIDStr,
-		"title", payload.Title,
-		"message", payload.Message,
-		"severity", payload.Severity,
-		"author", payload.Author,
-		"system", payload.System,
-		"timestamp", payload.Timestamp,
-		"tags", payload.Tags,
-	)
+	caught := models.CaughtMessage{
+		Message:  *payload,
+		ObjectID: messageIDStr,
+		StreamID: msg.ID,
+		CaughtAt: time.Now(),
+	}
+
+	for _, h := range c.handlers {
+		h(caught)
+	}
 
 	return nil
 }
