@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -9,10 +10,12 @@ import (
 	"syscall"
 	"time"
 
+	tea "charm.land/bubbletea/v2"
 	"github.com/stuttgart-things/homerun2-core-catcher/internal/banner"
 	"github.com/stuttgart-things/homerun2-core-catcher/internal/catcher"
 	"github.com/stuttgart-things/homerun2-core-catcher/internal/config"
 	"github.com/stuttgart-things/homerun2-core-catcher/internal/store"
+	"github.com/stuttgart-things/homerun2-core-catcher/internal/tui"
 
 	homerun "github.com/stuttgart-things/homerun-library/v2"
 )
@@ -41,8 +44,10 @@ func main() {
 	// Build message handlers based on mode
 	var handlers []catcher.MessageHandler
 
-	// Log handler is always active
-	handlers = append(handlers, catcher.LogHandler())
+	// Log handler is always active (except cli mode where TUI owns the terminal)
+	if mode != "cli" {
+		handlers = append(handlers, catcher.LogHandler())
+	}
 
 	// Store handler for modes that need in-memory storage (cli, web)
 	var msgStore *store.MessageStore
@@ -50,7 +55,6 @@ func main() {
 		maxMessages, _ := strconv.Atoi(homerun.GetEnv("MAX_MESSAGES", "10000"))
 		msgStore = store.New(maxMessages)
 		handlers = append(handlers, catcher.StoreHandler(msgStore))
-		_ = msgStore // will be used by TUI/web in future
 	}
 
 	// Create catcher backend
@@ -92,27 +96,51 @@ func main() {
 		)
 	}
 
-	// Handle shutdown signals
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	switch mode {
+	case "cli":
+		// Run catcher in background, TUI in foreground
+		go c.Run()
 
-	// Collect errors
-	if errCh := c.Errors(); errCh != nil {
-		go func() {
-			for err := range errCh {
-				slog.Error("consumer error", "error", err)
-			}
-		}()
-	}
+		// Collect errors in background
+		if errCh := c.Errors(); errCh != nil {
+			go func() {
+				for err := range errCh {
+					slog.Error("consumer error", "error", err)
+				}
+			}()
+		}
 
-	go func() {
-		<-quit
-		slog.Info("shutting down catcher")
+		p := tea.NewProgram(tui.New(msgStore))
+		if _, err := p.Run(); err != nil {
+			fmt.Fprintf(os.Stderr, "TUI error: %v\n", err)
+			os.Exit(1)
+		}
+
 		c.Shutdown()
-	}()
 
-	slog.Info("catcher running, waiting for messages...")
-	c.Run()
+	default: // log, web
+		// Handle shutdown signals
+		quit := make(chan os.Signal, 1)
+		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
-	slog.Info("catcher exited gracefully")
+		// Collect errors
+		if errCh := c.Errors(); errCh != nil {
+			go func() {
+				for err := range errCh {
+					slog.Error("consumer error", "error", err)
+				}
+			}()
+		}
+
+		go func() {
+			<-quit
+			slog.Info("shutting down catcher")
+			c.Shutdown()
+		}()
+
+		slog.Info("catcher running, waiting for messages...")
+		c.Run()
+
+		slog.Info("catcher exited gracefully")
+	}
 }
