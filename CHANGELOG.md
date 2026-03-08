@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.3.0...v0.4.0) (2026-03-08)
+
+
+### Features
+
+* add web mode with HTMX-based dashboard UI ([d4aec83](https://github.com/stuttgart-things/homerun2-core-catcher/commit/d4aec834084551cd62efb898c7800d90c8cbc6bd)), closes [#6](https://github.com/stuttgart-things/homerun2-core-catcher/issues/6)
+
 # [0.3.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.2.0...v0.3.0) (2026-03-08)
 
 
