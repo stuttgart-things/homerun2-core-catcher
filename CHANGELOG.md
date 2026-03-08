@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.2.0...v1.2.1) (2026-03-08)
+
+
+### Bug Fixes
+
+* add goreleaser config to exclude windows builds ([bec2f88](https://github.com/stuttgart-things/homerun2-core-catcher/commit/bec2f88c37655581eb376a2e8c357be885d8c2d5))
+
 # [1.2.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.1.0...v1.2.0) (2026-03-08)
 
 
