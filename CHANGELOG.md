@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.1.0...v1.2.0) (2026-03-08)
+
+
+### Features
+
+* add KCL deployment module and deploy tasks ([c0006b9](https://github.com/stuttgart-things/homerun2-core-catcher/commit/c0006b9041b4e2eaaafc9454ca19b7b7fe0a1796))
+
 # [1.1.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.1...v1.1.0) (2026-03-08)
 
 
