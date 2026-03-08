@@ -51,7 +51,9 @@ homerun2-core-catcher — Go CLI microservice that consumes messages from Redis 
 - `internal/catcher/` — Catcher interface, Redis consumer, mock
 - `internal/config/` — env-based config loading
 - `internal/banner/` — animated TUI startup banner
-- `dagger/main.go` — CI functions (Lint, Build, BuildImage, ScanImage, BuildAndTestBinary)
+- `dagger/main.go` — CI functions (Lint, Build, BuildImage, ScanImage, BuildAndTestBinary, IntegrationTest)
+- `kcl/` — KCL deployment manifests (schema, deploy, configmap, secret, namespace, serviceaccount)
+- `tests/kcl-deploy-profile.yaml` — KCL deploy profile for cluster deployment
 - `Taskfile.yaml` — task runner for build/test/deploy/release
 - `.ko.yaml` — ko build configuration
 - `.github/workflows/` — CI/CD (build-test, build-scan-image, release, lint-repo)

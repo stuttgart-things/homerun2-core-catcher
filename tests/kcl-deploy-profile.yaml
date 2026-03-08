@@ -1,0 +1,7 @@
+config.image: ghcr.io/stuttgart-things/homerun2-core-catcher:latest
+config.namespace: homerun2
+config.redisAddr: redis-stack.homerun2.svc.cluster.local
+config.redisPort: "6379"
+config.redisStream: messages
+config.consumerGroup: homerun2-core-catcher
+config.redisPassword: changeme

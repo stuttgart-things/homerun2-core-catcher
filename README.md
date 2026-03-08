@@ -104,7 +104,8 @@ internal/
   config/                  # Env-based config loading, slog setup
   catcher/                 # Catcher interface (Redis consumer + Mock)
 dagger/                    # CI functions (Lint, Build, Test, IntegrationTest, Scan)
-tests/                     # Test data (integration test messages)
+kcl/                       # KCL deployment manifests (Kubernetes)
+tests/                     # Test data (integration test messages, deploy profiles)
 .ko.yaml                   # ko build configuration
 Taskfile.yaml              # Task runner
 ```
@@ -185,6 +186,58 @@ task lint
 
 ```bash
 task build-scan-image-ko
+```
+
+</details>
+
+## Kubernetes Deployment (KCL)
+
+<details>
+<summary><b>Render manifests</b></summary>
+
+The `kcl/` directory contains KCL modules that generate Kubernetes manifests (Namespace, ServiceAccount, ConfigMap, Secret, Deployment).
+
+```bash
+# Render manifests (interactive)
+task render-manifests
+
+# Render manifests (non-interactive, uses defaults)
+task render-manifests-quick
+```
+
+</details>
+
+<details>
+<summary><b>Deploy to cluster via KCL</b></summary>
+
+Deploy using the Dagger kubernetes-deployment blueprint, which pulls the kustomize OCI artifact and applies it:
+
+```bash
+# Push kustomize base as OCI artifact (requires GITHUB_USER + GITHUB_TOKEN)
+task push-kustomize-base
+
+# Deploy to cluster (uses ~/.kube/movie-scripts by default)
+task deploy-kcl
+
+# Deploy with custom parameters
+task deploy-kcl KUBECONFIG=~/.kube/my-cluster NAMESPACE=my-namespace
+```
+
+</details>
+
+<details>
+<summary><b>Deploy profile</b></summary>
+
+Edit `tests/kcl-deploy-profile.yaml` to customize the deployment:
+
+```yaml
+config.image: ghcr.io/stuttgart-things/homerun2-core-catcher:latest
+config.namespace: homerun2
+config.redisAddr: redis-stack.homerun2.svc.cluster.local
+config.redisPort: "6379"
+config.redisStream: messages
+config.consumerGroup: homerun2-core-catcher
+config.redisPassword: changeme
 ```
 
 </details>
