@@ -1,3 +1,10 @@
+# [0.3.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.2.0...v0.3.0) (2026-03-08)
+
+
+### Features
+
+* add CLI mode with interactive Bubble Tea TUI ([fcbd713](https://github.com/stuttgart-things/homerun2-core-catcher/commit/fcbd7131c2392b88d8a6dbc47b5bb572f26b3830)), closes [#5](https://github.com/stuttgart-things/homerun2-core-catcher/issues/5)
+
 # [0.2.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.1.1...v0.2.0) (2026-03-08)
 
 
