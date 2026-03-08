@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.1...v1.1.0) (2026-03-08)
+
+
+### Features
+
+* add end-to-end integration test with pitcher via Dagger ([44c0047](https://github.com/stuttgart-things/homerun2-core-catcher/commit/44c00473681f544f43fa7ca7ed594dbb8b4f801d))
+
 ## [1.0.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.0...v1.0.1) (2026-03-08)
 
 
