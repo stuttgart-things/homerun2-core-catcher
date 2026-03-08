@@ -1,3 +1,10 @@
+## [0.1.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.1.0...v0.1.1) (2026-03-08)
+
+
+### Bug Fixes
+
+* resolve full message payload from Redis JSON using messageID ([42ce156](https://github.com/stuttgart-things/homerun2-core-catcher/commit/42ce156e4936d9e4de604e44e4bdfe2cc69dda4a)), closes [#1](https://github.com/stuttgart-things/homerun2-core-catcher/issues/1)
+
 # [0.1.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.0.0...v0.1.0) (2026-03-08)
 
 
