@@ -1,3 +1,18 @@
+# [0.1.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.0.0...v0.1.0) (2026-03-08)
+
+
+### Bug Fixes
+
+* add goreleaser config to exclude windows builds ([bec2f88](https://github.com/stuttgart-things/homerun2-core-catcher/commit/bec2f88c37655581eb376a2e8c357be885d8c2d5))
+* set BufferSize and Concurrency for redis consumer ([30398c5](https://github.com/stuttgart-things/homerun2-core-catcher/commit/30398c5e27b9e25b683d822333ff1029f8dc439b))
+
+
+### Features
+
+* add end-to-end integration test with pitcher via Dagger ([44c0047](https://github.com/stuttgart-things/homerun2-core-catcher/commit/44c00473681f544f43fa7ca7ed594dbb8b4f801d))
+* add KCL deployment module and deploy tasks ([c0006b9](https://github.com/stuttgart-things/homerun2-core-catcher/commit/c0006b9041b4e2eaaafc9454ca19b7b7fe0a1796))
+* add mkdocs, GitHub Pages workflow, and enable kustomize push ([ac1219c](https://github.com/stuttgart-things/homerun2-core-catcher/commit/ac1219c565e1c972aab2528489c641e2d1a2bde3))
+
 # 1.0.0 (2026-03-08)
 
 
