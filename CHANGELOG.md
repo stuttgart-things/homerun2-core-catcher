@@ -1,3 +1,10 @@
+# [0.2.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.1.1...v0.2.0) (2026-03-08)
+
+
+### Features
+
+* add MessageStore, log mode, FileCatcher, and mode selection ([063bef1](https://github.com/stuttgart-things/homerun2-core-catcher/commit/063bef1d4fa3e92f105e854aa5a2328ffc9afa98)), closes [#3](https://github.com/stuttgart-things/homerun2-core-catcher/issues/3) [#4](https://github.com/stuttgart-things/homerun2-core-catcher/issues/4) [#7](https://github.com/stuttgart-things/homerun2-core-catcher/issues/7) [#8](https://github.com/stuttgart-things/homerun2-core-catcher/issues/8)
+
 ## [0.1.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.1.0...v0.1.1) (2026-03-08)
 
 
