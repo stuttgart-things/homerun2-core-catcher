@@ -1,0 +1,50 @@
+[
+  {
+    "title": "Integration Test - Message Delivery",
+    "message": "Verifying end-to-end message flow from pitcher through Redis stream to catcher",
+    "severity": "info",
+    "author": "integration-test",
+    "system": "smoke-test",
+    "tags": "integration,e2e,verification"
+  },
+  {
+    "title": "Build Pipeline Completed",
+    "message": "Build #1337 passed all stages: lint, test, build, scan, push",
+    "severity": "success",
+    "author": "github-actions",
+    "system": "ci-pipeline",
+    "tags": "ci,build,success",
+    "assigneename": "Dev Team",
+    "assigneeaddress": "dev@example.com",
+    "url": "https://github.com/example/project/actions/runs/1337"
+  },
+  {
+    "title": "Memory Pressure Alert",
+    "message": "Node worker-2 memory usage at 92% - consider scaling or eviction",
+    "severity": "warning",
+    "author": "prometheus-alertmanager",
+    "system": "monitoring",
+    "tags": "infrastructure,memory,alerting",
+    "assigneename": "SRE Team",
+    "assigneeaddress": "sre@example.com"
+  },
+  {
+    "title": "Schema Migration Failed",
+    "message": "Migration 20260308_add_partitions failed: timeout acquiring lock on table events",
+    "severity": "error",
+    "author": "flyway",
+    "system": "staging-db",
+    "tags": "database,migration,error",
+    "assigneename": "Backend Team",
+    "assigneeaddress": "backend@example.com"
+  },
+  {
+    "title": "Container Scan Clean",
+    "message": "Trivy scan for catcher:dev completed - 0 critical, 0 high vulnerabilities",
+    "severity": "info",
+    "author": "trivy-operator",
+    "system": "security-pipeline",
+    "tags": "security,scan,container",
+    "artifacts": "ghcr.io/example/catcher:dev"
+  }
+]

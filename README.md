@@ -103,7 +103,8 @@ internal/
   banner/                  # Animated startup banner (Bubble Tea)
   config/                  # Env-based config loading, slog setup
   catcher/                 # Catcher interface (Redis consumer + Mock)
-dagger/                    # CI functions (Lint, Build, Test, Scan)
+dagger/                    # CI functions (Lint, Build, Test, IntegrationTest, Scan)
+tests/                     # Test data (integration test messages)
 .ko.yaml                   # ko build configuration
 Taskfile.yaml              # Task runner
 ```
@@ -142,11 +143,31 @@ go test ./...
 <details>
 <summary><b>Integration tests (Dagger + Redis)</b></summary>
 
-Integration tests spin up a Redis service via Dagger:
+Basic integration test — builds the catcher, starts Redis, sends a test message via `redis-cli`:
 
 ```bash
 task build-test-binary
 ```
+
+</details>
+
+<details>
+<summary><b>End-to-end integration test (Dagger + Redis + Pitcher)</b></summary>
+
+Full end-to-end test that spins up Redis, downloads the [omni-pitcher](https://github.com/stuttgart-things/homerun2-omni-pitcher) binary from GitHub releases, pitches test messages through it, and verifies the catcher consumes them all:
+
+```bash
+# Run with latest pitcher release
+task integration-test
+
+# Pin a specific pitcher version
+task integration-test PITCHER_VERSION=v1.2.0
+
+# Use custom test messages
+task integration-test MESSAGES_FILE=path/to/messages.json
+```
+
+The test report is exported to `/tmp/integration-test-report-homerun2-core-catcher.txt`.
 
 </details>
 

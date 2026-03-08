@@ -63,6 +63,28 @@ tasks:
         export --path={{ .TEST_REPORT_PATH }} \
         --progress plain -vv
 
+  integration-test:
+    desc: Run end-to-end test with pitcher + Redis + catcher via Dagger
+    vars:
+      PITCHER_VERSION: '{{ .PITCHER_VERSION | default "latest" }}'
+      MESSAGES_FILE: '{{ .MESSAGES_FILE | default "tests/integration-test-messages.json" }}'
+      DELAY_SEC: '{{ .DELAY_SEC | default "2" }}'
+      INTEGRATION_REPORT_PATH: /tmp/integration-test-report-{{ .PROJECT }}.txt
+    cmds:
+      - |
+        echo "Running integration test (pitcher={{ .PITCHER_VERSION }})..."
+
+        dagger call -m {{ .DAGGER_MODULE_DIR }} integration-test \
+          --source "{{ .SOURCE_CODE_DIR }}" \
+          --messages-file "{{ .MESSAGES_FILE }}" \
+          --pitcher-version "{{ .PITCHER_VERSION }}" \
+          --delay-sec "{{ .DELAY_SEC }}" \
+          --progress plain \
+          export --path={{ .INTEGRATION_REPORT_PATH }}
+
+        echo ""
+        cat {{ .INTEGRATION_REPORT_PATH }}
+
   build-output-binary:
     desc: Build project binary
     cmds:
