@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOMERUN² core-catcher</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <script src="/static/htmx.min.js"></script>
+    <style>
+        :root { --pico-font-size: 14px; }
+        .severity-error { color: #ff4444; font-weight: bold; }
+        .severity-warning { color: #ffaa00; font-weight: bold; }
+        .severity-success { color: #00cc66; font-weight: bold; }
+        .severity-info { color: #4488ff; }
+        .severity-debug { color: #888888; }
+        .header-bar { background: #00cc66; color: #000; padding: 0.8rem 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .header-bar h1 { margin: 0; font-size: 1.4rem; }
+        .header-bar .actions { display: flex; gap: 0.5rem; }
+        .header-bar a { color: #000; font-size: 0.85rem; }
+        table { font-size: 0.85rem; }
+        .clickable { cursor: pointer; }
+        .clickable:hover { background: rgba(0,204,102,0.1); }
+        .detail-panel { background: var(--pico-card-background-color); border: 1px solid var(--pico-muted-border-color); padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        .detail-panel dt { color: #00cc66; font-weight: bold; }
+        .detail-panel dd { margin-bottom: 0.5rem; margin-left: 0; }
+        .controls { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+        .controls input[type="search"] { max-width: 300px; margin: 0; }
+        .page-info { color: var(--pico-muted-color); font-size: 0.85rem; }
+        .pagination { display: flex; gap: 0.5rem; align-items: center; }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <h1>HOMERUN² core-catcher</h1>
+        <div class="actions">
+            <a href="/export?format=json">Export JSON</a>
+            <a href="/export?format=csv">Export CSV</a>
+        </div>
+    </div>
+    <main class="container-fluid">
+        <div class="controls">
+            <input type="search" name="q" placeholder="Search messages..."
+                   value="{{.Query}}"
+                   hx-get="/messages"
+                   hx-trigger="input changed delay:300ms, search"
+                   hx-target="#message-table"
+                   hx-include="[name='sort'],[name='dir'],[name='size']"
+                   hx-push-url="true">
+            <input type="hidden" name="sort" value="{{.SortBy}}">
+            <input type="hidden" name="dir" value="{{.SortDir}}">
+            <input type="hidden" name="size" value="{{.PageSize}}">
+            <span class="page-info">{{.Total}} messages</span>
+        </div>
+
+        <div id="message-detail"></div>
+
+        <div id="message-table">
+            {{template "table.html" .}}
+        </div>
+    </main>
+</body>
+</html>

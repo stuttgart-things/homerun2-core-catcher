@@ -1,0 +1,23 @@
+{{define "detail.html"}}
+<div class="detail-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h3 style="margin:0">{{.Title}}</h3>
+        <a href="#" onclick="document.getElementById('message-detail').innerHTML='';return false;" style="font-size:0.85rem">✕ Close</a>
+    </div>
+    <dl>
+        <dt>Object ID</dt><dd>{{.ObjectID}}</dd>
+        <dt>Stream ID</dt><dd>{{.StreamID}}</dd>
+        <dt>Severity</dt><dd><span class="{{severityClass .Severity}}">{{.Severity}}</span></dd>
+        <dt>Message</dt><dd>{{.Message.Message}}</dd>
+        <dt>Author</dt><dd>{{.Author}}</dd>
+        <dt>System</dt><dd>{{.System}}</dd>
+        <dt>Timestamp</dt><dd>{{.Timestamp}}</dd>
+        <dt>Caught At</dt><dd>{{.CaughtAt.Format "2006-01-02 15:04:05"}}</dd>
+        {{if .Tags}}<dt>Tags</dt><dd>{{.Tags}}</dd>{{end}}
+        {{if .AssigneeName}}<dt>Assignee</dt><dd>{{.AssigneeName}}</dd>{{end}}
+        {{if .AssigneeAddress}}<dt>Assignee Address</dt><dd>{{.AssigneeAddress}}</dd>{{end}}
+        {{if .Artifacts}}<dt>Artifacts</dt><dd>{{.Artifacts}}</dd>{{end}}
+        {{if .Url}}<dt>URL</dt><dd><a href="{{.Url}}" target="_blank">{{.Url}}</a></dd>{{end}}
+    </dl>
+</div>
+{{end}}
