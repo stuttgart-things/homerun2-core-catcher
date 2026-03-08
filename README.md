@@ -61,6 +61,37 @@ helmfile apply -f \
 
 </details>
 
+<details>
+<summary><b>Run locally against a remote Kubernetes Redis</b></summary>
+
+Port-forward the Redis service from your cluster and run the catcher locally:
+
+```bash
+# Port-forward Redis (keep running in a separate terminal)
+export KUBECONFIG=~/.kube/<your-kubeconfig>
+kubectl port-forward -n redis-stack svc/redis-stack 6379:6379
+
+# Get the Redis password from the cluster secret
+kubectl get secret -n redis-stack redis-stack \
+  -o jsonpath='{.data.redis-password}' | base64 -d
+
+# Run the catcher (use a script to avoid shell escaping issues with special characters in the password)
+cat > /tmp/run-catcher.sh << 'EOF'
+#!/bin/bash
+export REDIS_ADDR=localhost
+export REDIS_PORT=6379
+export REDIS_PASSWORD='<REPLACE>'
+export REDIS_STREAM=messages
+export LOG_FORMAT=text
+go run .
+EOF
+bash /tmp/run-catcher.sh
+```
+
+> **Note:** Passwords containing `!` or other shell-special characters must be set inside a script with single-quoted heredoc (`<< 'EOF'`). Passing them directly via `export` or inline env vars can cause silent corruption from bash history expansion.
+
+</details>
+
 ## Development
 
 <details>

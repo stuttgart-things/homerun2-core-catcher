@@ -33,8 +33,10 @@ func NewRedisCatcher(rc homerun.RedisConfig, groupName, consumerName string) (*R
 	addr := fmt.Sprintf("%s:%s", rc.Addr, rc.Port)
 
 	consumer, err := redisqueue.NewConsumerWithOptions(&redisqueue.ConsumerOptions{
-		Name:      consumerName,
-		GroupName: groupName,
+		Name:       consumerName,
+		GroupName:  groupName,
+		BufferSize: 100,
+		Concurrency: 10,
 		RedisOptions: &redisqueue.RedisOptions{
 			Addr:     addr,
 			Password: rc.Password,
