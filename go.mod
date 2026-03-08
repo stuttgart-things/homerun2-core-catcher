@@ -5,6 +5,7 @@ go 1.25.5
 require (
 	charm.land/bubbletea/v2 v2.0.1
 	charm.land/lipgloss/v2 v2.0.0
+	github.com/redis/go-redis/v9 v9.7.0
 	github.com/stuttgart-things/homerun-library/v2 v2.0.1-0.20260307163657-17be19573fe0
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7
 )
@@ -160,7 +161,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/pterm/pterm v0.12.83 // indirect
-	github.com/redis/go-redis/v9 v9.7.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rs/xid v1.6.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
