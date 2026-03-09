@@ -8,6 +8,8 @@ import serviceaccount
 import configmap
 import secret
 import deploy
+import service
+import httproute
 
 # Export all manifests (filter out None values)
 manifests = [
@@ -17,5 +19,7 @@ manifests = [
         configmap.configMap
         secret.secretRedis
         deploy.deployment
+        service.service
+        httproute.httproute
     ] if m
 ]
