@@ -1,3 +1,10 @@
+# [0.5.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.4.0...v0.5.0) (2026-03-09)
+
+
+### Features
+
+* add Service and HTTPRoute KCL manifests for web mode ([e07c1b6](https://github.com/stuttgart-things/homerun2-core-catcher/commit/e07c1b6be5ffff462c6bc6b6a300927dec80270b))
+
 # [0.4.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.3.0...v0.4.0) (2026-03-08)
 
 
