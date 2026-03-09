@@ -1,3 +1,10 @@
+## [0.5.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.5.0...v0.5.1) (2026-03-09)
+
+
+### Bug Fixes
+
+* correct gateway parentRef in movie-scripts profile ([b9d6211](https://github.com/stuttgart-things/homerun2-core-catcher/commit/b9d6211c4a93b64dcfa6335c23690926d90c0abd))
+
 # [0.5.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.4.0...v0.5.0) (2026-03-09)
 
 
