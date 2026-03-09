@@ -28,8 +28,23 @@ schema CoreCatcher:
     # Consumer group
     consumerGroup: str = "homerun2-core-catcher"
 
+    # Service
+    serviceType: str = "ClusterIP"
+    servicePort: int = 80
+    containerPort: int = 8080
+
+    # HTTPRoute (Gateway API)
+    httpRouteEnabled: bool = False
+    httpRouteParentRefName: str = ""
+    httpRouteParentRefNamespace: str = ""
+    httpRouteHostname: str = ""
+    httpRouteAnnotations: {str:str} = {}
+
     # Secrets
     redisPassword: str = ""
+
+    # Catcher mode
+    catcherMode: str = "log"
 
     # Extra environment variables
     extraEnvVars: {str:str} = {}
@@ -40,5 +55,7 @@ schema CoreCatcher:
 
     check:
         replicas >= 0, "replicas must be >= 0"
+        servicePort >= 1 and servicePort <= 65535, "servicePort must be valid"
+        containerPort >= 1 and containerPort <= 65535, "containerPort must be valid"
         name != "", "name must not be empty"
         namespace != "", "namespace must not be empty"

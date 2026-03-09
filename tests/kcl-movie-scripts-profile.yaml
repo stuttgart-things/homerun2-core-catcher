@@ -5,3 +5,8 @@ config.redisPort: "6379"
 config.redisStream: messages
 config.consumerGroup: homerun2-core-catcher
 config.redisPassword: changeme # pragma: allowlist secret
+config.catcherMode: web
+config.httpRouteEnabled: "true"
+config.httpRouteHostname: homerun2-core-catcher.movie-scripts2.sthings-vsphere.labul.sva.de
+config.httpRouteParentRefName: sthings-gateway
+config.httpRouteParentRefNamespace: kube-system

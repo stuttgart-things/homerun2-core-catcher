@@ -37,7 +37,24 @@ deployment = {
                         name: config.name
                         image: config.image
                         imagePullPolicy: config.imagePullPolicy
+                        if config.catcherMode == "web":
+                            ports: [
+                                {
+                                    name: "http"
+                                    containerPort: config.containerPort
+                                    protocol: "TCP"
+                                }
+                            ]
                         env: [
+                            {
+                                name: "CATCHER_MODE"
+                                value: config.catcherMode
+                            }
+                            if config.catcherMode == "web":
+                                {
+                                    name: "PORT"
+                                    value: str(config.containerPort)
+                                }
                             {
                                 name: "REDIS_ADDR"
                                 value: config.redisAddr
@@ -82,6 +99,28 @@ deployment = {
                                 memory: config.memoryLimit
                             }
                         }
+                        if config.catcherMode == "web":
+                            livenessProbe: {
+                                httpGet: {
+                                    path: "/health"
+                                    port: "http"
+                                }
+                                initialDelaySeconds: 10
+                                periodSeconds: 10
+                                timeoutSeconds: 5
+                                failureThreshold: 3
+                            }
+                        if config.catcherMode == "web":
+                            readinessProbe: {
+                                httpGet: {
+                                    path: "/health"
+                                    port: "http"
+                                }
+                                initialDelaySeconds: 5
+                                periodSeconds: 5
+                                timeoutSeconds: 3
+                                failureThreshold: 3
+                            }
                         securityContext: {
                             readOnlyRootFilesystem: True
                             runAsNonRoot: True
