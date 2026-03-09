@@ -3,6 +3,7 @@
 A Go CLI microservice that consumes messages from Redis Streams using consumer groups and logs them for processing.
 
 [![Build & Test](https://github.com/stuttgart-things/homerun2-core-catcher/actions/workflows/build-test.yaml/badge.svg)](https://github.com/stuttgart-things/homerun2-core-catcher/actions/workflows/build-test.yaml)
+[![Docs](https://img.shields.io/badge/docs-pages-blue)](https://stuttgart-things.github.io/homerun2-core-catcher/)
 
 ## How It Works
 
@@ -190,6 +191,52 @@ task build-scan-image-ko
 
 </details>
 
+## Flux App Deployment
+
+<details>
+<summary><b>Deploy full stack via Flux (recommended)</b></summary>
+
+The [homerun2 Flux app](https://github.com/stuttgart-things/flux/tree/main/apps/homerun2) deploys the complete stack (Redis Stack + omni-pitcher + core-catcher) into a shared namespace using Kustomize Components.
+
+```yaml
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: homerun2-flux
+  namespace: flux-system
+spec:
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-apps
+  path: ./apps/homerun2
+  prune: true
+  wait: true
+  postBuild:
+    substitute:
+      HOMERUN2_NAMESPACE: homerun2-flux
+      HOMERUN2_CORE_CATCHER_VERSION: v0.5.0
+      HOMERUN2_CORE_CATCHER_KUSTOMIZE_VERSION: v0.5.0-web
+      HOMERUN2_CORE_CATCHER_HOSTNAME: catcher
+      HOMERUN2_OMNI_PITCHER_VERSION: v1.2.0
+      HOMERUN2_OMNI_PITCHER_HOSTNAME: pitcher
+      GATEWAY_NAME: my-gateway
+      GATEWAY_NAMESPACE: default
+      DOMAIN: my-cluster.example.com
+      HOMERUN2_REDIS_VERSION: "17.1.4"
+      HOMERUN2_REDIS_STORAGE_CLASS: nfs4-csi
+    substituteFrom:
+      - kind: Secret
+        name: homerun2-flux-secrets
+```
+
+See the [Flux app README](https://github.com/stuttgart-things/flux/tree/main/apps/homerun2) for all variables and a complete cluster example.
+
+</details>
+
 ## Kubernetes Deployment (KCL)
 
 <details>
@@ -244,6 +291,8 @@ config.redisPassword: changeme
 
 ## Links
 
+- [GitHub Pages](https://stuttgart-things.github.io/homerun2-core-catcher/)
+- [Flux App](https://github.com/stuttgart-things/flux/tree/main/apps/homerun2)
 - [Releases](https://github.com/stuttgart-things/homerun2-core-catcher/releases)
 - [Container Images](https://github.com/stuttgart-things/homerun2-core-catcher/pkgs/container/homerun2-core-catcher)
 - [homerun2-omni-pitcher](https://github.com/stuttgart-things/homerun2-omni-pitcher) (producer)

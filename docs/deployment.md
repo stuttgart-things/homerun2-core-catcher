@@ -67,6 +67,55 @@ oras pull ghcr.io/stuttgart-things/homerun2-core-catcher-kustomize:v0.1.0
 kubectl apply -k .
 ```
 
+## Flux App Deployment
+
+The recommended way to deploy the full homerun2 stack (Redis Stack + omni-pitcher + core-catcher) is via the [homerun2 Flux app](https://github.com/stuttgart-things/flux/tree/main/apps/homerun2). It uses Kustomize Components to deploy all services into a shared namespace with a single Flux Kustomization.
+
+```yaml
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: homerun2-flux
+  namespace: flux-system
+spec:
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-apps
+  path: ./apps/homerun2
+  prune: true
+  wait: true
+  postBuild:
+    substitute:
+      HOMERUN2_NAMESPACE: homerun2-flux
+      HOMERUN2_CORE_CATCHER_VERSION: v0.5.0
+      HOMERUN2_CORE_CATCHER_KUSTOMIZE_VERSION: v0.5.0-web
+      HOMERUN2_CORE_CATCHER_HOSTNAME: catcher
+      HOMERUN2_OMNI_PITCHER_VERSION: v1.2.0
+      HOMERUN2_OMNI_PITCHER_HOSTNAME: pitcher
+      GATEWAY_NAME: my-gateway
+      GATEWAY_NAMESPACE: default
+      DOMAIN: my-cluster.example.com
+      HOMERUN2_REDIS_VERSION: "17.1.4"
+      HOMERUN2_REDIS_STORAGE_CLASS: nfs4-csi
+      HOMERUN2_REDIS_STORAGE_SIZE: 8Gi
+    substituteFrom:
+      - kind: Secret
+        name: homerun2-flux-secrets
+```
+
+The core-catcher component patches the KCL base to:
+
+- Set `CATCHER_MODE=web` for the HTMX dashboard
+- Override the Redis connection to point to the co-deployed redis-stack
+- Patch the Redis password secret with the correct credentials
+- Replace the KCL-generated HTTPRoute with a component-level one (custom hostname)
+
+See the [Flux app README](https://github.com/stuttgart-things/flux/tree/main/apps/homerun2) for all substitution variables and a complete example.
+
 ## Container Image
 
 Built with [ko](https://ko.build/) using a distroless base image (`cgr.dev/chainguard/static:latest`):
