@@ -1,3 +1,10 @@
+# [0.6.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.5.1...v0.6.0) (2026-03-10)
+
+
+### Features
+
+* add filter dropdowns for System, Severity, Author and time range ([#16](https://github.com/stuttgart-things/homerun2-core-catcher/issues/16)) ([a934cb3](https://github.com/stuttgart-things/homerun2-core-catcher/commit/a934cb3623f11065a7ae3c5c92eab525447c8a40)), closes [#15](https://github.com/stuttgart-things/homerun2-core-catcher/issues/15)
+
 ## [0.5.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.5.0...v0.5.1) (2026-03-09)
 
 
