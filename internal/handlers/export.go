@@ -17,7 +17,7 @@ func ExportHandler(s *store.MessageStore) http.HandlerFunc {
 			format = "json"
 		}
 
-		messages := s.List(store.ListOptions{
+		result := s.List(store.ListOptions{
 			SortBy:  store.SortByTimestamp,
 			SortDir: store.SortDesc,
 		})
@@ -30,7 +30,7 @@ func ExportHandler(s *store.MessageStore) http.HandlerFunc {
 			writer := csv.NewWriter(w)
 			writer.Write([]string{"ObjectID", "Title", "Message", "Severity", "Author", "System", "Timestamp", "Tags"})
 
-			for _, m := range messages {
+			for _, m := range result.Messages {
 				writer.Write([]string{
 					m.ObjectID,
 					m.Title,
@@ -49,7 +49,7 @@ func ExportHandler(s *store.MessageStore) http.HandlerFunc {
 			w.Header().Set("Content-Disposition", "attachment; filename=messages.json")
 			enc := json.NewEncoder(w)
 			enc.SetIndent("", "  ")
-			if err := enc.Encode(messages); err != nil {
+			if err := enc.Encode(result.Messages); err != nil {
 				http.Error(w, fmt.Sprintf("export error: %v", err), http.StatusInternalServerError)
 			}
 		}

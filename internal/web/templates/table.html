@@ -2,29 +2,29 @@
 <table>
     <thead>
         <tr>
-            <th hx-get="/messages?sort=title&dir={{if and (eq .SortBy "title") (eq .SortDir "asc")}}desc{{else}}asc{{end}}&q={{.Query}}&size={{.PageSize}}"
+            <th hx-get="/messages?sort=title&dir={{if and (eq .SortBy "title") (eq .SortDir "asc")}}desc{{else}}asc{{end}}&q={{.Query}}&size={{.PageSize}}&system={{.FilterSystem}}&severity={{.FilterSeverity}}&author={{.FilterAuthor}}&time={{.FilterTime}}"
                 hx-target="#message-table" style="cursor:pointer">
                 Title {{if eq .SortBy "title"}}{{if eq .SortDir "asc"}}↑{{else}}↓{{end}}{{end}}
             </th>
-            <th hx-get="/messages?sort=severity&dir={{if and (eq .SortBy "severity") (eq .SortDir "asc")}}desc{{else}}asc{{end}}&q={{.Query}}&size={{.PageSize}}"
+            <th hx-get="/messages?sort=severity&dir={{if and (eq .SortBy "severity") (eq .SortDir "asc")}}desc{{else}}asc{{end}}&q={{.Query}}&size={{.PageSize}}&system={{.FilterSystem}}&severity={{.FilterSeverity}}&author={{.FilterAuthor}}&time={{.FilterTime}}"
                 hx-target="#message-table" style="cursor:pointer">
                 Severity {{if eq .SortBy "severity"}}{{if eq .SortDir "asc"}}↑{{else}}↓{{end}}{{end}}
             </th>
-            <th hx-get="/messages?sort=system&dir={{if and (eq .SortBy "system") (eq .SortDir "asc")}}desc{{else}}asc{{end}}&q={{.Query}}&size={{.PageSize}}"
+            <th hx-get="/messages?sort=system&dir={{if and (eq .SortBy "system") (eq .SortDir "asc")}}desc{{else}}asc{{end}}&q={{.Query}}&size={{.PageSize}}&system={{.FilterSystem}}&severity={{.FilterSeverity}}&author={{.FilterAuthor}}&time={{.FilterTime}}"
                 hx-target="#message-table" style="cursor:pointer">
                 System {{if eq .SortBy "system"}}{{if eq .SortDir "asc"}}↑{{else}}↓{{end}}{{end}}
             </th>
-            <th hx-get="/messages?sort=author&dir={{if and (eq .SortBy "author") (eq .SortDir "asc")}}desc{{else}}asc{{end}}&q={{.Query}}&size={{.PageSize}}"
+            <th hx-get="/messages?sort=author&dir={{if and (eq .SortBy "author") (eq .SortDir "asc")}}desc{{else}}asc{{end}}&q={{.Query}}&size={{.PageSize}}&system={{.FilterSystem}}&severity={{.FilterSeverity}}&author={{.FilterAuthor}}&time={{.FilterTime}}"
                 hx-target="#message-table" style="cursor:pointer">
                 Author {{if eq .SortBy "author"}}{{if eq .SortDir "asc"}}↑{{else}}↓{{end}}{{end}}
             </th>
-            <th hx-get="/messages?sort=timestamp&dir={{if and (eq .SortBy "timestamp") (eq .SortDir "asc")}}desc{{else}}asc{{end}}&q={{.Query}}&size={{.PageSize}}"
+            <th hx-get="/messages?sort=timestamp&dir={{if and (eq .SortBy "timestamp") (eq .SortDir "asc")}}desc{{else}}asc{{end}}&q={{.Query}}&size={{.PageSize}}&system={{.FilterSystem}}&severity={{.FilterSeverity}}&author={{.FilterAuthor}}&time={{.FilterTime}}"
                 hx-target="#message-table" style="cursor:pointer">
                 Time {{if eq .SortBy "timestamp"}}{{if eq .SortDir "asc"}}↑{{else}}↓{{end}}{{end}}
             </th>
         </tr>
     </thead>
-    <tbody hx-get="/messages?sort={{.SortBy}}&dir={{.SortDir}}&q={{.Query}}&page={{.Page}}&size={{.PageSize}}"
+    <tbody hx-get="/messages?sort={{.SortBy}}&dir={{.SortDir}}&q={{.Query}}&page={{.Page}}&size={{.PageSize}}&system={{.FilterSystem}}&severity={{.FilterSeverity}}&author={{.FilterAuthor}}&time={{.FilterTime}}"
            hx-trigger="every 5s"
            hx-target="#message-table"
            hx-swap="innerHTML">
@@ -40,19 +40,19 @@
             <td>{{.CaughtAt.Format "2006-01-02 15:04:05"}}</td>
         </tr>
         {{else}}
-        <tr><td colspan="5" style="text-align:center;color:var(--pico-muted-color)">No messages yet — waiting for stream...</td></tr>
+        <tr><td colspan="5" style="text-align:center;color:var(--pico-muted-color)">No messages match the current filters</td></tr>
         {{end}}
     </tbody>
 </table>
 
 <div class="pagination">
     {{if .HasPrev}}
-    <a href="#" hx-get="/messages?sort={{.SortBy}}&dir={{.SortDir}}&q={{.Query}}&page={{sub .Page 1}}&size={{.PageSize}}"
+    <a href="#" hx-get="/messages?sort={{.SortBy}}&dir={{.SortDir}}&q={{.Query}}&page={{sub .Page 1}}&size={{.PageSize}}&system={{.FilterSystem}}&severity={{.FilterSeverity}}&author={{.FilterAuthor}}&time={{.FilterTime}}"
        hx-target="#message-table">← Previous</a>
     {{end}}
     <span class="page-info">Page {{add .Page 1}} / {{.TotalPages}}</span>
     {{if .HasNext}}
-    <a href="#" hx-get="/messages?sort={{.SortBy}}&dir={{.SortDir}}&q={{.Query}}&page={{add .Page 1}}&size={{.PageSize}}"
+    <a href="#" hx-get="/messages?sort={{.SortBy}}&dir={{.SortDir}}&q={{.Query}}&page={{add .Page 1}}&size={{.PageSize}}&system={{.FilterSystem}}&severity={{.FilterSeverity}}&author={{.FilterAuthor}}&time={{.FilterTime}}"
        hx-target="#message-table">Next →</a>
     {{end}}
 </div>

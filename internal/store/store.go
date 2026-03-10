@@ -1,8 +1,10 @@
 package store
 
 import (
+	"slices"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/stuttgart-things/homerun2-core-catcher/internal/models"
 )
@@ -26,12 +28,28 @@ const (
 	SortDesc
 )
 
-// ListOptions controls pagination and sorting.
+// FilterOptions controls which messages to include.
+type FilterOptions struct {
+	System   string // exact match (empty = all)
+	Severity string // exact match (empty = all)
+	Author   string // exact match (empty = all)
+	Since    time.Duration // only messages newer than this (0 = all)
+	Query    string // free-text search across all fields
+}
+
+// ListOptions controls pagination, sorting, and filtering.
 type ListOptions struct {
-	Offset    int
-	Limit     int
-	SortBy    SortField
-	SortDir   SortDirection
+	Offset  int
+	Limit   int
+	SortBy  SortField
+	SortDir SortDirection
+	Filter  FilterOptions
+}
+
+// ListResult contains paginated results with total count.
+type ListResult struct {
+	Messages []models.CaughtMessage
+	Total    int
 }
 
 // MessageStore holds caught messages in memory.
@@ -74,25 +92,27 @@ func (s *MessageStore) Add(msg models.CaughtMessage) {
 	s.messages = append(s.messages, msg)
 }
 
-// List returns messages according to the given options.
-func (s *MessageStore) List(opts ListOptions) []models.CaughtMessage {
+// List returns messages according to the given options, applying filters first.
+func (s *MessageStore) List(opts ListOptions) ListResult {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	sorted := s.sorted(opts.SortBy, opts.SortDir)
+	filtered := s.applyFilters(opts.Filter)
+	sortMessages(filtered, opts.SortBy, opts.SortDir)
 
-	if opts.Offset >= len(sorted) {
-		return nil
+	total := len(filtered)
+	if opts.Offset >= total {
+		return ListResult{Total: total}
 	}
 
 	end := opts.Offset + opts.Limit
-	if opts.Limit <= 0 || end > len(sorted) {
-		end = len(sorted)
+	if opts.Limit <= 0 || end > total {
+		end = total
 	}
 
 	result := make([]models.CaughtMessage, end-opts.Offset)
-	copy(result, sorted[opts.Offset:end])
-	return result
+	copy(result, filtered[opts.Offset:end])
+	return ListResult{Messages: result, Total: total}
 }
 
 // Search returns messages where any field contains the query string (case-insensitive).
@@ -130,6 +150,73 @@ func (s *MessageStore) Count() int {
 	return len(s.messages)
 }
 
+// DistinctSystems returns all unique system values.
+func (s *MessageStore) DistinctSystems() []string {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	return s.distinctField(func(m models.CaughtMessage) string { return m.System })
+}
+
+// DistinctSeverities returns all unique severity values.
+func (s *MessageStore) DistinctSeverities() []string {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	return s.distinctField(func(m models.CaughtMessage) string { return m.Severity })
+}
+
+// DistinctAuthors returns all unique author values.
+func (s *MessageStore) DistinctAuthors() []string {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	return s.distinctField(func(m models.CaughtMessage) string { return m.Author })
+}
+
+func (s *MessageStore) distinctField(extract func(models.CaughtMessage) string) []string {
+	seen := make(map[string]struct{})
+	for _, m := range s.messages {
+		v := extract(m)
+		if v != "" {
+			seen[v] = struct{}{}
+		}
+	}
+	result := make([]string, 0, len(seen))
+	for v := range seen {
+		result = append(result, v)
+	}
+	slices.Sort(result)
+	return result
+}
+
+func (s *MessageStore) applyFilters(f FilterOptions) []models.CaughtMessage {
+	var cutoff time.Time
+	if f.Since > 0 {
+		cutoff = time.Now().Add(-f.Since)
+	}
+
+	q := strings.ToLower(f.Query)
+
+	result := make([]models.CaughtMessage, 0, len(s.messages))
+	for _, m := range s.messages {
+		if f.System != "" && m.System != f.System {
+			continue
+		}
+		if f.Severity != "" && m.Severity != f.Severity {
+			continue
+		}
+		if f.Author != "" && m.Author != f.Author {
+			continue
+		}
+		if !cutoff.IsZero() && m.CaughtAt.Before(cutoff) {
+			continue
+		}
+		if q != "" && !matchesQuery(m, q) {
+			continue
+		}
+		result = append(result, m)
+	}
+	return result
+}
+
 func matchesQuery(m models.CaughtMessage, q string) bool {
 	fields := []string{
 		m.Title, m.Message.Message, m.Severity, m.Author,
@@ -143,35 +230,25 @@ func matchesQuery(m models.CaughtMessage, q string) bool {
 	return false
 }
 
-func (s *MessageStore) sorted(by SortField, dir SortDirection) []models.CaughtMessage {
-	cp := make([]models.CaughtMessage, len(s.messages))
-	copy(cp, s.messages)
-
-	less := func(i, j int) bool {
-		var a, b string
+func sortMessages(msgs []models.CaughtMessage, by SortField, dir SortDirection) {
+	slices.SortFunc(msgs, func(a, b models.CaughtMessage) int {
+		var va, vb string
 		switch by {
 		case SortBySeverity:
-			a, b = cp[i].Severity, cp[j].Severity
+			va, vb = a.Severity, b.Severity
 		case SortBySystem:
-			a, b = cp[i].System, cp[j].System
+			va, vb = a.System, b.System
 		case SortByAuthor:
-			a, b = cp[i].Author, cp[j].Author
+			va, vb = a.Author, b.Author
 		case SortByTitle:
-			a, b = cp[i].Title, cp[j].Title
+			va, vb = a.Title, b.Title
 		default: // SortByTimestamp
-			a, b = cp[i].CaughtAt.String(), cp[j].CaughtAt.String()
+			va, vb = a.CaughtAt.String(), b.CaughtAt.String()
 		}
+		cmp := strings.Compare(va, vb)
 		if dir == SortDesc {
-			return a > b
+			return -cmp
 		}
-		return a < b
-	}
-
-	// simple insertion sort (fine for bounded store)
-	for i := 1; i < len(cp); i++ {
-		for j := i; j > 0 && less(j, j-1); j-- {
-			cp[j], cp[j-1] = cp[j-1], cp[j]
-		}
-	}
-	return cp
+		return cmp
+	})
 }
