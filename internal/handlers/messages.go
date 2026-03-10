@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/stuttgart-things/homerun2-core-catcher/internal/store"
 	"github.com/stuttgart-things/homerun2-core-catcher/internal/web"
@@ -78,16 +78,42 @@ func MessageDetailHandler(s *store.MessageStore) http.HandlerFunc {
 }
 
 type tableData struct {
-	Messages  interface{}
-	Query     string
-	SortBy    string
-	SortDir   string
-	Page      int
-	PageSize  int
-	Total     int
+	Messages   interface{}
+	Query      string
+	SortBy     string
+	SortDir    string
+	Page       int
+	PageSize   int
+	Total      int
+	TotalAll   int
 	TotalPages int
-	HasPrev   bool
-	HasNext   bool
+	HasPrev    bool
+	HasNext    bool
+	// Filter values
+	FilterSystem   string
+	FilterSeverity string
+	FilterAuthor   string
+	FilterTime     string
+	// Distinct values for dropdowns
+	Systems    []string
+	Severities []string
+	Authors    []string
+}
+
+// parseSinceDuration converts a time filter string to a duration.
+func parseSinceDuration(s string) time.Duration {
+	switch s {
+	case "1h":
+		return time.Hour
+	case "6h":
+		return 6 * time.Hour
+	case "24h":
+		return 24 * time.Hour
+	case "7d":
+		return 7 * 24 * time.Hour
+	default:
+		return 0
+	}
 }
 
 func buildTableData(s *store.MessageStore, r *http.Request) tableData {
@@ -98,6 +124,12 @@ func buildTableData(s *store.MessageStore, r *http.Request) tableData {
 	sortDir := q.Get("dir")
 	pageStr := q.Get("page")
 	pageSizeStr := q.Get("size")
+
+	// Filter params
+	filterSystem := q.Get("system")
+	filterSeverity := q.Get("severity")
+	filterAuthor := q.Get("author")
+	filterTime := q.Get("time")
 
 	page, _ := strconv.Atoi(pageStr)
 	if page < 0 {
@@ -132,55 +164,44 @@ func buildTableData(s *store.MessageStore, r *http.Request) tableData {
 		dir = store.SortAsc
 	}
 
-	var messages interface{}
-	var total int
+	result := s.List(store.ListOptions{
+		Offset:  page * pageSize,
+		Limit:   pageSize,
+		SortBy:  sortField,
+		SortDir: dir,
+		Filter: store.FilterOptions{
+			System:   filterSystem,
+			Severity: filterSeverity,
+			Author:   filterAuthor,
+			Since:    parseSinceDuration(filterTime),
+			Query:    query,
+		},
+	})
 
-	if query != "" {
-		all := s.Search(query)
-		total = len(all)
-		start := page * pageSize
-		if start >= total {
-			messages = nil
-		} else {
-			end := start + pageSize
-			if end > total {
-				end = total
-			}
-			slice := all[start:end]
-			messages = slice
-		}
-	} else {
-		total = s.Count()
-		messages = s.List(store.ListOptions{
-			Offset:  page * pageSize,
-			Limit:   pageSize,
-			SortBy:  sortField,
-			SortDir: dir,
-		})
-	}
-
+	total := result.Total
 	totalPages := 1
 	if total > 0 {
 		totalPages = (total + pageSize - 1) / pageSize
 	}
 
-	// Toggle sort direction for column header links
-	nextDir := "asc"
-	if sortDir == "asc" {
-		nextDir = "desc"
-	}
-	_ = nextDir
-
 	return tableData{
-		Messages:   messages,
-		Query:      query,
-		SortBy:     sortBy,
-		SortDir:    fmt.Sprintf("%s", sortDir),
-		Page:       page,
-		PageSize:   pageSize,
-		Total:      total,
-		TotalPages: totalPages,
-		HasPrev:    page > 0,
-		HasNext:    page < totalPages-1,
+		Messages:       result.Messages,
+		Query:          query,
+		SortBy:         sortBy,
+		SortDir:        sortDir,
+		Page:           page,
+		PageSize:       pageSize,
+		Total:          total,
+		TotalAll:       s.Count(),
+		TotalPages:     totalPages,
+		HasPrev:        page > 0,
+		HasNext:        page < totalPages-1,
+		FilterSystem:   filterSystem,
+		FilterSeverity: filterSeverity,
+		FilterAuthor:   filterAuthor,
+		FilterTime:     filterTime,
+		Systems:        s.DistinctSystems(),
+		Severities:     s.DistinctSeverities(),
+		Authors:        s.DistinctAuthors(),
 	}
 }

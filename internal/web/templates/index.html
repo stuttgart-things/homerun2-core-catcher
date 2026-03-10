@@ -23,10 +23,13 @@
         .detail-panel { background: var(--pico-card-background-color); border: 1px solid var(--pico-muted-border-color); padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1rem; }
         .detail-panel dt { color: #00cc66; font-weight: bold; }
         .detail-panel dd { margin-bottom: 0.5rem; margin-left: 0; }
-        .controls { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
-        .controls input[type="search"] { max-width: 300px; margin: 0; }
+        .controls { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+        .controls input[type="search"] { max-width: 250px; margin: 0; }
+        .controls select { max-width: 180px; margin: 0; padding: 0.4rem 0.6rem; font-size: 0.85rem; }
         .page-info { color: var(--pico-muted-color); font-size: 0.85rem; }
         .pagination { display: flex; gap: 0.5rem; align-items: center; }
+        .filter-count { font-size: 0.85rem; color: var(--pico-muted-color); }
+        .filter-count strong { color: #00cc66; }
     </style>
 </head>
 <body>
@@ -39,17 +42,64 @@
     </div>
     <main class="container-fluid">
         <div class="controls">
-            <input type="search" name="q" placeholder="Search messages..."
+            <input type="search" name="q" placeholder="Search..."
                    value="{{.Query}}"
                    hx-get="/messages"
                    hx-trigger="input changed delay:300ms, search"
                    hx-target="#message-table"
-                   hx-include="[name='sort'],[name='dir'],[name='size']"
+                   hx-include=".filter-control"
                    hx-push-url="true">
-            <input type="hidden" name="sort" value="{{.SortBy}}">
-            <input type="hidden" name="dir" value="{{.SortDir}}">
-            <input type="hidden" name="size" value="{{.PageSize}}">
-            <span class="page-info">{{.Total}} messages</span>
+
+            <select name="system" class="filter-control"
+                    hx-get="/messages"
+                    hx-trigger="change"
+                    hx-target="#message-table"
+                    hx-include="[name='q'],[name='sort'],[name='dir'],[name='size'],.filter-control">
+                <option value="">All Systems</option>
+                {{range .Systems}}
+                <option value="{{.}}" {{if eq . $.FilterSystem}}selected{{end}}>{{.}}</option>
+                {{end}}
+            </select>
+
+            <select name="severity" class="filter-control"
+                    hx-get="/messages"
+                    hx-trigger="change"
+                    hx-target="#message-table"
+                    hx-include="[name='q'],[name='sort'],[name='dir'],[name='size'],.filter-control">
+                <option value="">All Severities</option>
+                {{range .Severities}}
+                <option value="{{.}}" {{if eq . $.FilterSeverity}}selected{{end}}>{{.}}</option>
+                {{end}}
+            </select>
+
+            <select name="author" class="filter-control"
+                    hx-get="/messages"
+                    hx-trigger="change"
+                    hx-target="#message-table"
+                    hx-include="[name='q'],[name='sort'],[name='dir'],[name='size'],.filter-control">
+                <option value="">All Authors</option>
+                {{range .Authors}}
+                <option value="{{.}}" {{if eq . $.FilterAuthor}}selected{{end}}>{{.}}</option>
+                {{end}}
+            </select>
+
+            <select name="time" class="filter-control"
+                    hx-get="/messages"
+                    hx-trigger="change"
+                    hx-target="#message-table"
+                    hx-include="[name='q'],[name='sort'],[name='dir'],[name='size'],.filter-control">
+                <option value="" {{if eq .FilterTime ""}}selected{{end}}>All Time</option>
+                <option value="1h" {{if eq .FilterTime "1h"}}selected{{end}}>Last 1h</option>
+                <option value="6h" {{if eq .FilterTime "6h"}}selected{{end}}>Last 6h</option>
+                <option value="24h" {{if eq .FilterTime "24h"}}selected{{end}}>Last 24h</option>
+                <option value="7d" {{if eq .FilterTime "7d"}}selected{{end}}>Last 7d</option>
+            </select>
+
+            <input type="hidden" name="sort" class="filter-control" value="{{.SortBy}}">
+            <input type="hidden" name="dir" class="filter-control" value="{{.SortDir}}">
+            <input type="hidden" name="size" class="filter-control" value="{{.PageSize}}">
+
+            <span class="filter-count"><strong>{{.Total}}</strong> / {{.TotalAll}} messages</span>
         </div>
 
         <div id="message-detail"></div>

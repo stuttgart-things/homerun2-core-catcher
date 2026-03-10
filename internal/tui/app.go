@@ -247,24 +247,16 @@ func (m Model) renderDetail() string {
 }
 
 func (m Model) fetchRows() []models.CaughtMessage {
-	if m.search.query != "" {
-		all := m.store.Search(m.search.query)
-		start := m.page * m.pageSize
-		if start >= len(all) {
-			return nil
-		}
-		end := start + m.pageSize
-		if end > len(all) {
-			end = len(all)
-		}
-		return all[start:end]
-	}
-	return m.store.List(store.ListOptions{
+	result := m.store.List(store.ListOptions{
 		Offset:  m.page * m.pageSize,
 		Limit:   m.pageSize,
 		SortBy:  m.sortField,
 		SortDir: m.sortDir,
+		Filter: store.FilterOptions{
+			Query: m.search.query,
+		},
 	})
+	return result.Messages
 }
 
 func (m Model) totalPages() int {
