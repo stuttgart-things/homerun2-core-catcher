@@ -1,3 +1,10 @@
+## [0.6.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.6.0...v0.6.1) (2026-03-13)
+
+
+### Bug Fixes
+
+* add catcherMode web to KCL deploy profile ([d293c14](https://github.com/stuttgart-things/homerun2-core-catcher/commit/d293c14861eb5a7f99ac8b7334d879e64bf94bdf))
+
 # [0.6.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.5.1...v0.6.0) (2026-03-10)
 
 
