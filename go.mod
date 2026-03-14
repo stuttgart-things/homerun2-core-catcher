@@ -4,7 +4,7 @@ go 1.25.5
 
 require (
 	charm.land/bubbletea/v2 v2.0.1
-	charm.land/lipgloss/v2 v2.0.0
+	charm.land/lipgloss/v2 v2.0.2
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/stuttgart-things/homerun-library/v2 v2.0.1-0.20260307163657-17be19573fe0
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7
@@ -205,7 +205,7 @@ require (
 	golang.org/x/net v0.49.0 // indirect
 	golang.org/x/oauth2 v0.24.0 // indirect
 	golang.org/x/sync v0.19.0 // indirect
-	golang.org/x/sys v0.41.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/term v0.40.0 // indirect
 	golang.org/x/text v0.34.0 // indirect
 	golang.org/x/time v0.8.0 // indirect
