@@ -39,29 +39,29 @@ var mittArt = []string{
 const fieldWidth = 70
 
 var (
-	// Green gradient — catcher style
+	// Indigo gradient — clusterbook-inspired palette
 	greenHot = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#00CC66")).
+			Foreground(lipgloss.Color("#818cf8")).
 			Bold(true)
 
 	greenBright = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#00FF99")).
+			Foreground(lipgloss.Color("#a5b4fc")).
 			Bold(true)
 
 	dimGreen = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#005522"))
+			Foreground(lipgloss.Color("#312e81"))
 
-	// The "2" in a contrasting cyan
+	// The "2" in a contrasting orange accent
 	accentStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#00FFCC")).
+			Foreground(lipgloss.Color("#f97316")).
 			Bold(true)
 
 	serviceBlockStyle = lipgloss.NewStyle().
-				Foreground(lipgloss.Color("#009966")).
+				Foreground(lipgloss.Color("#6366f1")).
 				Bold(true)
 
 	mittStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#FFFFFF")).
+			Foreground(lipgloss.Color("#f8fafc")).
 			Bold(true)
 )
 

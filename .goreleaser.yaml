@@ -19,6 +19,9 @@ builds:
       - -s
       - -w
       - -extldflags=-static
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
     goos:
       - linux
       - darwin
