@@ -1,3 +1,10 @@
+# [0.8.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.7.4...v0.8.0) (2026-03-15)
+
+
+### Features
+
+* web UI tweaks, build date fix, and local dev tasks ([e235e3a](https://github.com/stuttgart-things/homerun2-core-catcher/commit/e235e3af968060f93117a406889e73ff617300fe))
+
 ## [0.7.4](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.7.3...v0.7.4) (2026-03-15)
 
 
