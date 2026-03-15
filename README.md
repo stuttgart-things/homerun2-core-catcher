@@ -18,16 +18,46 @@ omni-pitcher → Redis Stream → core-catcher → slog output
 ## Deployment
 
 <details>
-<summary><b>Run locally</b></summary>
+<summary><b>Deploy full stack via Flux (recommended)</b></summary>
 
-```bash
-# Start Redis (via Dagger)
-task run-redis-as-service
+The [homerun2 Flux app](https://github.com/stuttgart-things/flux/tree/main/apps/homerun2) deploys the complete stack (Redis Stack + omni-pitcher + core-catcher) into a shared namespace using Kustomize Components.
 
-# Run the catcher
-export REDIS_ADDR=localhost REDIS_PORT=6379 REDIS_STREAM=messages
-go run .
+```yaml
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: homerun2-flux
+  namespace: flux-system
+spec:
+  interval: 1h
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-apps
+  path: ./apps/homerun2
+  prune: true
+  wait: true
+  postBuild:
+    substitute:
+      HOMERUN2_NAMESPACE: homerun2-flux
+      HOMERUN2_CORE_CATCHER_VERSION: v0.5.0
+      HOMERUN2_CORE_CATCHER_KUSTOMIZE_VERSION: v0.5.0-web
+      HOMERUN2_CORE_CATCHER_HOSTNAME: catcher
+      HOMERUN2_OMNI_PITCHER_VERSION: v1.2.0
+      HOMERUN2_OMNI_PITCHER_HOSTNAME: pitcher
+      GATEWAY_NAME: my-gateway
+      GATEWAY_NAMESPACE: default
+      DOMAIN: my-cluster.example.com
+      HOMERUN2_REDIS_VERSION: "17.1.4"
+      HOMERUN2_REDIS_STORAGE_CLASS: nfs4-csi
+    substituteFrom:
+      - kind: Secret
+        name: homerun2-flux-secrets
 ```
+
+See the [Flux app README](https://github.com/stuttgart-things/flux/tree/main/apps/homerun2) for all variables and a complete cluster example.
 
 </details>
 
@@ -93,6 +123,56 @@ bash /tmp/run-catcher.sh
 
 </details>
 
+<details>
+<summary><b>Render KCL manifests</b></summary>
+
+The `kcl/` directory contains KCL modules that generate Kubernetes manifests (Namespace, ServiceAccount, ConfigMap, Secret, Deployment).
+
+```bash
+# Render manifests (interactive)
+task render-manifests
+
+# Render manifests (non-interactive, uses defaults)
+task render-manifests-quick
+```
+
+</details>
+
+<details>
+<summary><b>Deploy to cluster via KCL</b></summary>
+
+Deploy using the Dagger kubernetes-deployment blueprint, which pulls the kustomize OCI artifact and applies it:
+
+```bash
+# Push kustomize base as OCI artifact (requires GITHUB_USER + GITHUB_TOKEN)
+task push-kustomize-base
+
+# Deploy to cluster (uses ~/.kube/movie-scripts by default)
+task deploy-kcl
+
+# Deploy with custom parameters
+task deploy-kcl KUBECONFIG=~/.kube/my-cluster NAMESPACE=my-namespace
+```
+
+</details>
+
+<details>
+<summary><b>Deploy profile</b></summary>
+
+Edit `tests/kcl-deploy-profile.yaml` to customize the deployment:
+
+```yaml
+config.image: ghcr.io/stuttgart-things/homerun2-core-catcher:latest
+config.namespace: homerun2
+config.redisAddr: redis-stack.homerun2.svc.cluster.local
+config.redisPort: "6379"
+config.redisStream: messages
+config.consumerGroup: homerun2-core-catcher
+config.redisPassword: changeme
+```
+
+</details>
+
 ## Development
 
 <details>
@@ -129,7 +209,19 @@ Taskfile.yaml              # Task runner
 
 </details>
 
-## Local Development
+<details>
+<summary><b>Run locally (with Redis)</b></summary>
+
+```bash
+# Start Redis (via Dagger)
+task run-redis-as-service
+
+# Run the catcher
+export REDIS_ADDR=localhost REDIS_PORT=6379 REDIS_STREAM=messages
+go run .
+```
+
+</details>
 
 <details>
 <summary><b>Run web UI with file backend</b></summary>
@@ -156,8 +248,6 @@ task run-cli FILE_PATH=tests/integration-test-messages.json
 ```
 
 </details>
-
-## Testing
 
 <details>
 <summary><b>Unit tests</b></summary>
@@ -219,104 +309,6 @@ task build-scan-image-ko
 
 </details>
 
-## Flux App Deployment
-
-<details>
-<summary><b>Deploy full stack via Flux (recommended)</b></summary>
-
-The [homerun2 Flux app](https://github.com/stuttgart-things/flux/tree/main/apps/homerun2) deploys the complete stack (Redis Stack + omni-pitcher + core-catcher) into a shared namespace using Kustomize Components.
-
-```yaml
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: homerun2-flux
-  namespace: flux-system
-spec:
-  interval: 1h
-  retryInterval: 1m
-  timeout: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-apps
-  path: ./apps/homerun2
-  prune: true
-  wait: true
-  postBuild:
-    substitute:
-      HOMERUN2_NAMESPACE: homerun2-flux
-      HOMERUN2_CORE_CATCHER_VERSION: v0.5.0
-      HOMERUN2_CORE_CATCHER_KUSTOMIZE_VERSION: v0.5.0-web
-      HOMERUN2_CORE_CATCHER_HOSTNAME: catcher
-      HOMERUN2_OMNI_PITCHER_VERSION: v1.2.0
-      HOMERUN2_OMNI_PITCHER_HOSTNAME: pitcher
-      GATEWAY_NAME: my-gateway
-      GATEWAY_NAMESPACE: default
-      DOMAIN: my-cluster.example.com
-      HOMERUN2_REDIS_VERSION: "17.1.4"
-      HOMERUN2_REDIS_STORAGE_CLASS: nfs4-csi
-    substituteFrom:
-      - kind: Secret
-        name: homerun2-flux-secrets
-```
-
-See the [Flux app README](https://github.com/stuttgart-things/flux/tree/main/apps/homerun2) for all variables and a complete cluster example.
-
-</details>
-
-## Kubernetes Deployment (KCL)
-
-<details>
-<summary><b>Render manifests</b></summary>
-
-The `kcl/` directory contains KCL modules that generate Kubernetes manifests (Namespace, ServiceAccount, ConfigMap, Secret, Deployment).
-
-```bash
-# Render manifests (interactive)
-task render-manifests
-
-# Render manifests (non-interactive, uses defaults)
-task render-manifests-quick
-```
-
-</details>
-
-<details>
-<summary><b>Deploy to cluster via KCL</b></summary>
-
-Deploy using the Dagger kubernetes-deployment blueprint, which pulls the kustomize OCI artifact and applies it:
-
-```bash
-# Push kustomize base as OCI artifact (requires GITHUB_USER + GITHUB_TOKEN)
-task push-kustomize-base
-
-# Deploy to cluster (uses ~/.kube/movie-scripts by default)
-task deploy-kcl
-
-# Deploy with custom parameters
-task deploy-kcl KUBECONFIG=~/.kube/my-cluster NAMESPACE=my-namespace
-```
-
-</details>
-
-<details>
-<summary><b>Deploy profile</b></summary>
-
-Edit `tests/kcl-deploy-profile.yaml` to customize the deployment:
-
-```yaml
-config.image: ghcr.io/stuttgart-things/homerun2-core-catcher:latest
-config.namespace: homerun2
-config.redisAddr: redis-stack.homerun2.svc.cluster.local
-config.redisPort: "6379"
-config.redisStream: messages
-config.consumerGroup: homerun2-core-catcher
-config.redisPassword: changeme
-```
-
-</details>
-
 ## Links
 
 - [GitHub Pages](https://stuttgart-things.github.io/homerun2-core-catcher/)
@@ -325,6 +317,10 @@ config.redisPassword: changeme
 - [Container Images](https://github.com/stuttgart-things/homerun2-core-catcher/pkgs/container/homerun2-core-catcher)
 - [homerun2-omni-pitcher](https://github.com/stuttgart-things/homerun2-omni-pitcher) (producer)
 - [homerun-library](https://github.com/stuttgart-things/homerun-library)
+
+## Author Information
+
+Patrick Hermann, stuttgart-things 03/2026
 
 ## License
 
