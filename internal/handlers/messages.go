@@ -46,7 +46,7 @@ func init() {
 func MessagesHandler(s *store.MessageStore, info BuildInfo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		data := buildTableData(s, r, info)
-		templates.ExecuteTemplate(w, "index.html", data)
+		_ = templates.ExecuteTemplate(w, "index.html", data)
 	}
 }
 
@@ -54,7 +54,7 @@ func MessagesHandler(s *store.MessageStore, info BuildInfo) http.HandlerFunc {
 func MessagesTableHandler(s *store.MessageStore, info BuildInfo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		data := buildTableData(s, r, info)
-		templates.ExecuteTemplate(w, "table.html", data)
+		_ = templates.ExecuteTemplate(w, "table.html", data)
 	}
 }
 
@@ -73,7 +73,7 @@ func MessageDetailHandler(s *store.MessageStore) http.HandlerFunc {
 			return
 		}
 
-		templates.ExecuteTemplate(w, "detail.html", msg)
+		_ = templates.ExecuteTemplate(w, "detail.html", msg)
 	}
 }
 
