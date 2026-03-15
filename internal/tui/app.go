@@ -19,9 +19,17 @@ const (
 // refreshMsg triggers a UI refresh.
 type refreshMsg struct{}
 
+// BuildInfo holds version metadata for display.
+type BuildInfo struct {
+	Version string
+	Commit  string
+	Date    string
+}
+
 // Model is the top-level Bubble Tea model.
 type Model struct {
 	store      *store.MessageStore
+	build      BuildInfo
 	view       int
 	table      tableModel
 	detail     detailModel
@@ -36,17 +44,18 @@ type Model struct {
 }
 
 // New creates a new TUI model.
-func New(s *store.MessageStore) Model {
+func New(s *store.MessageStore, info BuildInfo) Model {
 	return Model{
-		store:    s,
-		view:     viewList,
-		table:    newTable(),
-		detail:   newDetail(),
-		search:   newSearch(),
+		store:     s,
+		build:     info,
+		view:      viewList,
+		table:     newTable(),
+		detail:    newDetail(),
+		search:    newSearch(),
 		sortField: store.SortByTimestamp,
-		sortDir:  store.SortDesc,
-		page:     0,
-		pageSize: 20,
+		sortDir:   store.SortDesc,
+		page:      0,
+		pageSize:  20,
 	}
 }
 
@@ -194,9 +203,13 @@ func (m Model) View() tea.View {
 func (m Model) renderList() string {
 	var b strings.Builder
 
-	// Header
+	// Title block (bigger header)
+	titleLine := titleStyle.Width(m.width).Render("  HOMERUN² core-catcher")
+	b.WriteString(titleLine + "\n")
+
+	// Keybindings bar
 	header := headerStyle.Width(m.width).Render(
-		fmt.Sprintf("  HOMERUN² core-catcher    [/] search  [s] sort  [S] dir  [n/p] page  [enter] detail  [q] quit"),
+		"  [/] search  [s] sort  [S] dir  [n/p] page  [enter] detail  [q] quit",
 	)
 	b.WriteString(header + "\n")
 
@@ -216,17 +229,23 @@ func (m Model) renderList() string {
 	b.WriteString(sortInfoStyle.Render(fmt.Sprintf("  sort: %s %s", sortNames[m.sortField], dirName)) + "\n")
 
 	// Table
-	tableHeight := m.height - 7
+	tableHeight := m.height - 9
 	if m.searching || m.search.query != "" {
 		tableHeight--
 	}
 	b.WriteString(m.table.Render(m.width, tableHeight))
 
-	// Footer
+	// Footer with version info
 	total := m.store.Count()
 	totalPages := m.totalPages()
+	commitShort := m.build.Commit
+	if len(commitShort) > 7 {
+		commitShort = commitShort[:7]
+	}
 	footer := footerStyle.Width(m.width).Render(
-		fmt.Sprintf("  %d messages | page %d/%d | stream: messages", total, m.page+1, max(totalPages, 1)),
+		fmt.Sprintf("  %d messages | page %d/%d | v%s | %s | %s",
+			total, m.page+1, max(totalPages, 1),
+			m.build.Version, commitShort, m.build.Date),
 	)
 	b.WriteString("\n" + footer)
 
@@ -267,20 +286,26 @@ func (m Model) totalPages() int {
 	return (total + m.pageSize - 1) / m.pageSize
 }
 
-// Styles
+// Styles — indigo/navy palette inspired by clusterbook
 var (
+	titleStyle = lipgloss.NewStyle().
+		Background(lipgloss.Color("#4f46e5")).
+		Foreground(lipgloss.Color("#f8fafc")).
+		Bold(true).
+		Padding(0, 1)
+
 	headerStyle = lipgloss.NewStyle().
-		Background(lipgloss.Color("#00CC66")).
-		Foreground(lipgloss.Color("#000000")).
+		Background(lipgloss.Color("#1e293b")).
+		Foreground(lipgloss.Color("#94a3b8")).
 		Bold(true)
 
 	footerStyle = lipgloss.NewStyle().
-		Background(lipgloss.Color("#333333")).
-		Foreground(lipgloss.Color("#CCCCCC"))
+		Background(lipgloss.Color("#1e293b")).
+		Foreground(lipgloss.Color("#64748b"))
 
 	sortInfoStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#888888"))
+		Foreground(lipgloss.Color("#64748b"))
 
 	searchActiveStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#FFAA00"))
+		Foreground(lipgloss.Color("#f97316"))
 )

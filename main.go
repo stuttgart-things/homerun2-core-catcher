@@ -117,7 +117,7 @@ func main() {
 			}()
 		}
 
-		p := tea.NewProgram(tui.New(msgStore))
+		p := tea.NewProgram(tui.New(msgStore, tui.BuildInfo{Version: version, Commit: commit, Date: date}))
 		if _, err := p.Run(); err != nil {
 			fmt.Fprintf(os.Stderr, "TUI error: %v\n", err)
 			os.Exit(1)
@@ -141,8 +141,8 @@ func main() {
 		buildInfo := handlers.BuildInfo{Version: version, Commit: commit, Date: date}
 
 		mux := http.NewServeMux()
-		mux.HandleFunc("/", handlers.MessagesHandler(msgStore))
-		mux.HandleFunc("/messages", handlers.MessagesTableHandler(msgStore))
+		mux.HandleFunc("/", handlers.MessagesHandler(msgStore, buildInfo))
+		mux.HandleFunc("/messages", handlers.MessagesTableHandler(msgStore, buildInfo))
 		mux.HandleFunc("/messages/", handlers.MessageDetailHandler(msgStore))
 		mux.HandleFunc("/export", handlers.ExportHandler(msgStore))
 		mux.HandleFunc("/health", handlers.NewHealthHandler(buildInfo))
