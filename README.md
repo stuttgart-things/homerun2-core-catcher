@@ -15,7 +15,144 @@ Each stream entry contains a `messageID` referencing a Redis JSON object with th
 omni-pitcher → Redis Stream → core-catcher → slog output
 ```
 
-## Deployment
+
+## DEVELOPMENT
+
+<details>
+<summary><b>Project structure</b></summary>
+
+```
+main.go                    # Entrypoint, consumer setup, graceful shutdown
+internal/
+  banner/                  # Animated startup banner (Bubble Tea)
+  config/                  # Env-based config loading, slog setup
+  catcher/                 # Catcher interface (Redis consumer + Mock)
+dagger/                    # CI functions (Lint, Build, Test, IntegrationTest, Scan)
+kcl/                       # KCL deployment manifests (Kubernetes)
+tests/                     # Test data (integration test messages, deploy profiles)
+.ko.yaml                   # ko build configuration
+Taskfile.yaml              # Task runner
+```
+
+</details>
+
+<details>
+<summary><b>Configuration reference</b></summary>
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `REDIS_ADDR` | Redis server address | `localhost` |
+| `REDIS_PORT` | Redis server port | `6379` |
+| `REDIS_PASSWORD` | Redis password | (empty) |
+| `REDIS_STREAM` | Redis stream to consume from | `messages` |
+| `CONSUMER_GROUP` | Consumer group name | `homerun2-core-catcher` |
+| `CONSUMER_NAME` | Consumer name within the group | hostname |
+| `LOG_FORMAT` | Log format: `json` or `text` | `json` |
+| `LOG_LEVEL` | Log level: `debug`, `info`, `warn`, `error` | `info` |
+
+</details>
+
+<details>
+<summary><b>Run locally (with Redis)</b></summary>
+
+```bash
+# Start Redis (via Dagger)
+task run-redis-as-service
+
+# Run the catcher
+export REDIS_ADDR=localhost REDIS_PORT=6379 REDIS_STREAM=messages
+go run .
+```
+
+</details>
+
+<details>
+<summary><b>Run web UI with file backend</b></summary>
+
+```bash
+# Run web dashboard with sample messages (default port 8080)
+task run-web
+
+# Custom file and port
+task run-web FILE_PATH=tests/integration-test-messages.json PORT=9090
+```
+
+</details>
+
+<details>
+<summary><b>Run CLI TUI with file backend</b></summary>
+
+```bash
+# Run interactive TUI with sample messages
+task run-cli
+
+# Custom file
+task run-cli FILE_PATH=tests/integration-test-messages.json
+```
+
+</details>
+
+<details>
+<summary><b>Unit tests</b></summary>
+
+Unit tests run without Redis:
+
+```bash
+go test ./...
+```
+
+</details>
+
+<details>
+<summary><b>Integration tests (Dagger + Redis)</b></summary>
+
+Basic integration test — builds the catcher, starts Redis, sends a test message via `redis-cli`:
+
+```bash
+task build-test-binary
+```
+
+</details>
+
+<details>
+<summary><b>End-to-end integration test (Dagger + Redis + Pitcher)</b></summary>
+
+Full end-to-end test that spins up Redis, downloads the [omni-pitcher](https://github.com/stuttgart-things/homerun2-omni-pitcher) binary from GitHub releases, pitches test messages through it, and verifies the catcher consumes them all:
+
+```bash
+# Run with latest pitcher release
+task integration-test
+
+# Pin a specific pitcher version
+task integration-test PITCHER_VERSION=v1.2.0
+
+# Use custom test messages
+task integration-test MESSAGES_FILE=path/to/messages.json
+```
+
+The test report is exported to `/tmp/integration-test-report-homerun2-core-catcher.txt`.
+
+</details>
+
+<details>
+<summary><b>Lint</b></summary>
+
+```bash
+task lint
+```
+
+</details>
+
+<details>
+<summary><b>Build and scan container image</b></summary>
+
+```bash
+task build-scan-image-ko
+```
+
+</details>
+
+## DEPLOYMENT
 
 <details>
 <summary><b>Deploy full stack via Flux (recommended)</b></summary>
@@ -169,142 +306,6 @@ config.redisPort: "6379"
 config.redisStream: messages
 config.consumerGroup: homerun2-core-catcher
 config.redisPassword: changeme
-```
-
-</details>
-
-## Development
-
-<details>
-<summary><b>Project structure</b></summary>
-
-```
-main.go                    # Entrypoint, consumer setup, graceful shutdown
-internal/
-  banner/                  # Animated startup banner (Bubble Tea)
-  config/                  # Env-based config loading, slog setup
-  catcher/                 # Catcher interface (Redis consumer + Mock)
-dagger/                    # CI functions (Lint, Build, Test, IntegrationTest, Scan)
-kcl/                       # KCL deployment manifests (Kubernetes)
-tests/                     # Test data (integration test messages, deploy profiles)
-.ko.yaml                   # ko build configuration
-Taskfile.yaml              # Task runner
-```
-
-</details>
-
-<details>
-<summary><b>Configuration reference</b></summary>
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `REDIS_ADDR` | Redis server address | `localhost` |
-| `REDIS_PORT` | Redis server port | `6379` |
-| `REDIS_PASSWORD` | Redis password | (empty) |
-| `REDIS_STREAM` | Redis stream to consume from | `messages` |
-| `CONSUMER_GROUP` | Consumer group name | `homerun2-core-catcher` |
-| `CONSUMER_NAME` | Consumer name within the group | hostname |
-| `LOG_FORMAT` | Log format: `json` or `text` | `json` |
-| `LOG_LEVEL` | Log level: `debug`, `info`, `warn`, `error` | `info` |
-
-</details>
-
-<details>
-<summary><b>Run locally (with Redis)</b></summary>
-
-```bash
-# Start Redis (via Dagger)
-task run-redis-as-service
-
-# Run the catcher
-export REDIS_ADDR=localhost REDIS_PORT=6379 REDIS_STREAM=messages
-go run .
-```
-
-</details>
-
-<details>
-<summary><b>Run web UI with file backend</b></summary>
-
-```bash
-# Run web dashboard with sample messages (default port 8080)
-task run-web
-
-# Custom file and port
-task run-web FILE_PATH=tests/integration-test-messages.json PORT=9090
-```
-
-</details>
-
-<details>
-<summary><b>Run CLI TUI with file backend</b></summary>
-
-```bash
-# Run interactive TUI with sample messages
-task run-cli
-
-# Custom file
-task run-cli FILE_PATH=tests/integration-test-messages.json
-```
-
-</details>
-
-<details>
-<summary><b>Unit tests</b></summary>
-
-Unit tests run without Redis:
-
-```bash
-go test ./...
-```
-
-</details>
-
-<details>
-<summary><b>Integration tests (Dagger + Redis)</b></summary>
-
-Basic integration test — builds the catcher, starts Redis, sends a test message via `redis-cli`:
-
-```bash
-task build-test-binary
-```
-
-</details>
-
-<details>
-<summary><b>End-to-end integration test (Dagger + Redis + Pitcher)</b></summary>
-
-Full end-to-end test that spins up Redis, downloads the [omni-pitcher](https://github.com/stuttgart-things/homerun2-omni-pitcher) binary from GitHub releases, pitches test messages through it, and verifies the catcher consumes them all:
-
-```bash
-# Run with latest pitcher release
-task integration-test
-
-# Pin a specific pitcher version
-task integration-test PITCHER_VERSION=v1.2.0
-
-# Use custom test messages
-task integration-test MESSAGES_FILE=path/to/messages.json
-```
-
-The test report is exported to `/tmp/integration-test-report-homerun2-core-catcher.txt`.
-
-</details>
-
-<details>
-<summary><b>Lint</b></summary>
-
-```bash
-task lint
-```
-
-</details>
-
-<details>
-<summary><b>Build and scan container image</b></summary>
-
-```bash
-task build-scan-image-ko
 ```
 
 </details>
