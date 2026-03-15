@@ -1,3 +1,10 @@
+## [0.7.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.7.0...v0.7.1) (2026-03-15)
+
+
+### Bug Fixes
+
+* resolve errcheck and staticcheck lint issues ([6d6d408](https://github.com/stuttgart-things/homerun2-core-catcher/commit/6d6d4088faf8a81b152feb272f3a0942098022cc))
+
 # [0.7.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.6.1...v0.7.0) (2026-03-15)
 
 
