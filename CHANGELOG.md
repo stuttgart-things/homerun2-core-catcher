@@ -1,3 +1,10 @@
+## [0.7.4](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.7.3...v0.7.4) (2026-03-15)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/stuttgart-things/homerun-library/v2 to v3 ([24d2f27](https://github.com/stuttgart-things/homerun2-core-catcher/commit/24d2f27382aa2ac278c2151b0b31aaefab42ac32)), closes [#23](https://github.com/stuttgart-things/homerun2-core-catcher/issues/23)
+
 ## [0.7.3](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.7.2...v0.7.3) (2026-03-15)
 
 
