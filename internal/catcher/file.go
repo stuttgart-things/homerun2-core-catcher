@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	homerun "github.com/stuttgart-things/homerun-library/v2"
+	homerun "github.com/stuttgart-things/homerun-library/v3"
 	"github.com/stuttgart-things/homerun2-core-catcher/internal/models"
 )
 
