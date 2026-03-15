@@ -155,6 +155,32 @@ tasks:
         echo "Run: https://github.com/{{ .ORGA_NAME }}/{{ .PROJECT }}/actions/runs/${RUN_ID}"
         gh run watch "${RUN_ID}"
 
+  # === Local Dev ===
+
+  run-web:
+    desc: Run web UI with file backend (local dev)
+    vars:
+      FILE_PATH: '{{ .FILE_PATH | default "tests/integration-test-messages.json" }}'
+      PORT: '{{ .PORT | default "8080" }}'
+    env:
+      CATCHER_MODE: web
+      CATCHER_BACKEND: file
+      CATCHER_FILE_PATH: "{{ .FILE_PATH }}"
+      PORT: "{{ .PORT }}"
+    cmds:
+      - go run .
+
+  run-cli:
+    desc: Run CLI TUI with file backend (local dev)
+    vars:
+      FILE_PATH: '{{ .FILE_PATH | default "tests/integration-test-messages.json" }}'
+    env:
+      CATCHER_MODE: cli
+      CATCHER_BACKEND: file
+      CATCHER_FILE_PATH: "{{ .FILE_PATH }}"
+    cmds:
+      - go run .
+
   # === Redis (Development) ===
 
   run-redis-cli:

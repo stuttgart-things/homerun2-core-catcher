@@ -34,7 +34,7 @@
             hx-target="#message-detail"
             hx-swap="innerHTML">
             <td>{{.Title}}</td>
-            <td><span class="{{severityClass .Severity}}">{{.Severity}}</span></td>
+            <td><span class="{{severityClass .Severity}}" style="text-transform:uppercase">{{.Severity}}</span></td>
             <td>{{.System}}</td>
             <td>{{.Author}}</td>
             <td>{{.CaughtAt.Format "2006-01-02 15:04:05"}}</td>
@@ -46,6 +46,7 @@
 </table>
 
 <div class="pagination">
+    <span class="filter-count"><strong>{{.Total}}</strong> / {{.TotalAll}} messages</span>
     {{if .HasPrev}}
     <a href="#" hx-get="/messages?sort={{.SortBy}}&dir={{.SortDir}}&q={{.Query}}&page={{sub .Page 1}}&size={{.PageSize}}&system={{.FilterSystem}}&severity={{.FilterSeverity}}&author={{.FilterAuthor}}&time={{.FilterTime}}"
        hx-target="#message-table">← Previous</a>
