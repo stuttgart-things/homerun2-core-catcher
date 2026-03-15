@@ -39,5 +39,5 @@ func (s searchModel) View() string {
 }
 
 var searchStyle = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("#FFAA00")).
+	Foreground(lipgloss.Color("#f97316")).
 	Bold(true)

@@ -1,3 +1,10 @@
+# [0.7.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.6.1...v0.7.0) (2026-03-15)
+
+
+### Features
+
+* add version/build info to UI and adopt clusterbook color scheme ([cc6debb](https://github.com/stuttgart-things/homerun2-core-catcher/commit/cc6debbea9bf301a7f83ebfab3e9760c4234f94e)), closes [#4f46e5](https://github.com/stuttgart-things/homerun2-core-catcher/issues/4f46e5) [#818cf8](https://github.com/stuttgart-things/homerun2-core-catcher/issues/818cf8) [#f97316](https://github.com/stuttgart-things/homerun2-core-catcher/issues/f97316)
+
 ## [0.6.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.6.0...v0.6.1) (2026-03-13)
 
 

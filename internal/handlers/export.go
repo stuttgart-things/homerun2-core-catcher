@@ -28,10 +28,10 @@ func ExportHandler(s *store.MessageStore) http.HandlerFunc {
 			w.Header().Set("Content-Disposition", "attachment; filename=messages.csv")
 
 			writer := csv.NewWriter(w)
-			writer.Write([]string{"ObjectID", "Title", "Message", "Severity", "Author", "System", "Timestamp", "Tags"})
+			_ = writer.Write([]string{"ObjectID", "Title", "Message", "Severity", "Author", "System", "Timestamp", "Tags"})
 
 			for _, m := range result.Messages {
-				writer.Write([]string{
+				_ = writer.Write([]string{
 					m.ObjectID,
 					m.Title,
 					m.Message.Message,

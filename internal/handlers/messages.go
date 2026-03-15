@@ -43,18 +43,18 @@ func init() {
 }
 
 // MessagesHandler serves the main dashboard page.
-func MessagesHandler(s *store.MessageStore) http.HandlerFunc {
+func MessagesHandler(s *store.MessageStore, info BuildInfo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		data := buildTableData(s, r)
-		templates.ExecuteTemplate(w, "index.html", data)
+		data := buildTableData(s, r, info)
+		_ = templates.ExecuteTemplate(w, "index.html", data)
 	}
 }
 
 // MessagesTableHandler serves the HTMX partial for the message table.
-func MessagesTableHandler(s *store.MessageStore) http.HandlerFunc {
+func MessagesTableHandler(s *store.MessageStore, info BuildInfo) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		data := buildTableData(s, r)
-		templates.ExecuteTemplate(w, "table.html", data)
+		data := buildTableData(s, r, info)
+		_ = templates.ExecuteTemplate(w, "table.html", data)
 	}
 }
 
@@ -73,7 +73,7 @@ func MessageDetailHandler(s *store.MessageStore) http.HandlerFunc {
 			return
 		}
 
-		templates.ExecuteTemplate(w, "detail.html", msg)
+		_ = templates.ExecuteTemplate(w, "detail.html", msg)
 	}
 }
 
@@ -98,6 +98,10 @@ type tableData struct {
 	Systems    []string
 	Severities []string
 	Authors    []string
+	// Build info
+	Version string
+	Commit  string
+	Date    string
 }
 
 // parseSinceDuration converts a time filter string to a duration.
@@ -116,7 +120,7 @@ func parseSinceDuration(s string) time.Duration {
 	}
 }
 
-func buildTableData(s *store.MessageStore, r *http.Request) tableData {
+func buildTableData(s *store.MessageStore, r *http.Request, info BuildInfo) tableData {
 	q := r.URL.Query()
 
 	query := q.Get("q")
@@ -203,5 +207,8 @@ func buildTableData(s *store.MessageStore, r *http.Request) tableData {
 		Systems:        s.DistinctSystems(),
 		Severities:     s.DistinctSeverities(),
 		Authors:        s.DistinctAuthors(),
+		Version:        info.Version,
+		Commit:         info.Commit,
+		Date:           info.Date,
 	}
 }
