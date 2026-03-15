@@ -321,7 +321,9 @@ config.redisPassword: changeme
 
 ## Author Information
 
+```bash
 Patrick Hermann, stuttgart-things 03/2026
+```
 
 ## License
 
