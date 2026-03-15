@@ -81,7 +81,7 @@ func (c *RedisCatcher) Run() {
 func (c *RedisCatcher) Shutdown() {
 	c.consumer.Shutdown()
 	if c.redisClient != nil {
-		c.redisClient.Close()
+		_ = c.redisClient.Close()
 	}
 }
 

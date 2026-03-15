@@ -102,30 +102,30 @@ func applySeverityColor(row, severity string, base lipgloss.Style) string {
 	case "error":
 		return base.Foreground(lipgloss.Color("#FF4444")).Render(row)
 	case "warning":
-		return base.Foreground(lipgloss.Color("#FFAA00")).Render(row)
+		return base.Foreground(lipgloss.Color("#f97316")).Render(row)
 	case "success":
-		return base.Foreground(lipgloss.Color("#00CC66")).Render(row)
+		return base.Foreground(lipgloss.Color("#4ade80")).Render(row)
 	case "debug":
-		return base.Foreground(lipgloss.Color("#888888")).Render(row)
+		return base.Foreground(lipgloss.Color("#64748b")).Render(row)
 	default:
-		return base.Render(row)
+		return base.Foreground(lipgloss.Color("#e2e8f0")).Render(row)
 	}
 }
 
 var (
 	tableHeaderStyle = lipgloss.NewStyle().
 		Bold(true).
-		Foreground(lipgloss.Color("#00CC66")).
-		Background(lipgloss.Color("#1A1A1A"))
+		Foreground(lipgloss.Color("#818cf8")).
+		Background(lipgloss.Color("#0f172a"))
 
 	rowStyle = lipgloss.NewStyle()
 
 	selectedRowStyle = lipgloss.NewStyle().
-		Background(lipgloss.Color("#004422")).
-		Foreground(lipgloss.Color("#FFFFFF")).
+		Background(lipgloss.Color("#4f46e5")).
+		Foreground(lipgloss.Color("#f8fafc")).
 		Bold(true)
 
 	emptyStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#666666")).
+		Foreground(lipgloss.Color("#475569")).
 		Italic(true)
 )

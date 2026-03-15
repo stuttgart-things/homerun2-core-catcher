@@ -1,6 +1,7 @@
 package catcher
 
 import (
+	"context"
 	"log/slog"
 
 	"github.com/stuttgart-things/homerun2-core-catcher/internal/models"
@@ -12,7 +13,7 @@ func LogHandler() MessageHandler {
 	return func(msg models.CaughtMessage) {
 		level := severityToLevel(msg.Severity)
 
-		slog.Log(nil, level, "message caught",
+		slog.Log(context.Background(), level, "message caught",
 			"objectId", msg.ObjectID,
 			"streamId", msg.StreamID,
 			"title", msg.Title,
