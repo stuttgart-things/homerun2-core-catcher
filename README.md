@@ -129,6 +129,34 @@ Taskfile.yaml              # Task runner
 
 </details>
 
+## Local Development
+
+<details>
+<summary><b>Run web UI with file backend</b></summary>
+
+```bash
+# Run web dashboard with sample messages (default port 8080)
+task run-web
+
+# Custom file and port
+task run-web FILE_PATH=tests/integration-test-messages.json PORT=9090
+```
+
+</details>
+
+<details>
+<summary><b>Run CLI TUI with file backend</b></summary>
+
+```bash
+# Run interactive TUI with sample messages
+task run-cli
+
+# Custom file
+task run-cli FILE_PATH=tests/integration-test-messages.json
+```
+
+</details>
+
 ## Testing
 
 <details>
