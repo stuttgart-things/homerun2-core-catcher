@@ -170,7 +170,7 @@ func main() {
 
 		ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 		defer cancel()
-		srv.Shutdown(ctx)
+		_ = srv.Shutdown(ctx)
 		c.Shutdown()
 
 		slog.Info("catcher exited gracefully")
