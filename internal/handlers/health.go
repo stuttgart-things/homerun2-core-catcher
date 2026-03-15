@@ -22,7 +22,7 @@ func NewHealthHandler(info BuildInfo) http.HandlerFunc {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]string{
+		_ = json.NewEncoder(w).Encode(map[string]string{
 			"status":  "healthy",
 			"time":    time.Now().UTC().Format(time.RFC3339),
 			"version": info.Version,
