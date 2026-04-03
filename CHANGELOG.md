@@ -1,3 +1,10 @@
+# [0.9.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.8.0...v0.9.0) (2026-04-03)
+
+
+### Features
+
+* add favicon to web dashboard ([78d5461](https://github.com/stuttgart-things/homerun2-core-catcher/commit/78d5461126880296e6f89a8a483d64f7b1797714)), closes [#38](https://github.com/stuttgart-things/homerun2-core-catcher/issues/38)
+
 # [0.8.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.7.4...v0.8.0) (2026-03-15)
 
 
