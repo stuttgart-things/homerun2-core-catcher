@@ -197,13 +197,13 @@ func (s *MessageStore) applyFilters(f FilterOptions) []models.CaughtMessage {
 
 	result := make([]models.CaughtMessage, 0, len(s.messages))
 	for _, m := range s.messages {
-		if f.System != "" && m.System != f.System {
+		if f.System != "" && !strings.EqualFold(m.System, f.System) {
 			continue
 		}
-		if f.Severity != "" && m.Severity != f.Severity {
+		if f.Severity != "" && !strings.EqualFold(m.Severity, f.Severity) {
 			continue
 		}
-		if f.Author != "" && m.Author != f.Author {
+		if f.Author != "" && !strings.EqualFold(m.Author, f.Author) {
 			continue
 		}
 		if !cutoff.IsZero() && m.CaughtAt.Before(cutoff) {

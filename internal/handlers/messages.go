@@ -25,7 +25,7 @@ func init() {
 			return s
 		},
 		"severityClass": func(s string) string {
-			switch s {
+			switch strings.ToLower(s) {
 			case "error":
 				return "severity-error"
 			case "warning":
