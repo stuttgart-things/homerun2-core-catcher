@@ -1,3 +1,10 @@
+## [0.9.2](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.9.1...v0.9.2) (2026-04-07)
+
+
+### Bug Fixes
+
+* use case-insensitive comparison for severity, system, and author filters ([8786ef9](https://github.com/stuttgart-things/homerun2-core-catcher/commit/8786ef945836a6428b8815e2f75112f6b996b82e)), closes [#42](https://github.com/stuttgart-things/homerun2-core-catcher/issues/42)
+
 ## [0.9.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.9.0...v0.9.1) (2026-04-07)
 
 
