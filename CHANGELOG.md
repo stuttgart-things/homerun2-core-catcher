@@ -1,3 +1,10 @@
+## [0.10.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.10.0...v0.10.1) (2026-04-08)
+
+
+### Bug Fixes
+
+* hydrate in-memory store from RedisJSON on startup ([163be77](https://github.com/stuttgart-things/homerun2-core-catcher/commit/163be77fc19f507783d34ed6a0c61b4ac8d82275)), closes [#47](https://github.com/stuttgart-things/homerun2-core-catcher/issues/47)
+
 # [0.10.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.9.2...v0.10.0) (2026-04-08)
 
 
