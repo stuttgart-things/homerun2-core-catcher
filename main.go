@@ -104,6 +104,20 @@ func main() {
 		)
 	}
 
+	// Hydrate store from existing RedisJSON documents before starting servers
+	if msgStore != nil {
+		if h, ok := c.(catcher.Hydrator); ok {
+			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+			loaded, err := h.HydrateStore(ctx)
+			cancel()
+			if err != nil {
+				slog.Warn("store hydration failed", "error", err, "loaded", loaded)
+			} else {
+				slog.Info("store hydrated from existing Redis documents", "loaded", loaded)
+			}
+		}
+	}
+
 	switch mode {
 	case "cli":
 		// Run catcher in background, TUI in foreground
