@@ -24,6 +24,11 @@ type Catcher interface {
 	Errors() <-chan error
 }
 
+// Hydrator is an optional interface for catchers that can pre-load existing messages into the store.
+type Hydrator interface {
+	HydrateStore(ctx context.Context) (int, error)
+}
+
 // RedisCatcher consumes messages from Redis Streams and resolves full payloads from Redis JSON.
 type RedisCatcher struct {
 	consumer    *redisqueue.Consumer
@@ -125,6 +130,57 @@ func (c *RedisCatcher) handleMessage(msg *redisqueue.Message) error {
 	}
 
 	return nil
+}
+
+// HydrateStore scans existing RedisJSON documents and loads them into the store
+// via the configured handlers. This populates the in-memory store on startup so
+// that web/cli modes show existing messages immediately, independent of consumer
+// group state.
+func (c *RedisCatcher) HydrateStore(ctx context.Context) (int, error) {
+	var cursor uint64
+	var loaded int
+
+	for {
+		keys, nextCursor, err := c.redisClient.Scan(ctx, cursor, "*", 100).Result()
+		if err != nil {
+			return loaded, fmt.Errorf("SCAN: %w", err)
+		}
+
+		for _, key := range keys {
+			// Skip non-JSON keys by attempting JSON.GET
+			result, err := c.redisClient.Do(ctx, "JSON.GET", key, ".").Text()
+			if err != nil {
+				// Not a JSON key or other error — skip
+				continue
+			}
+
+			var msg homerun.Message
+			if err := json.Unmarshal([]byte(result), &msg); err != nil {
+				slog.Warn("hydrate: failed to unmarshal JSON key", "key", key, "error", err)
+				continue
+			}
+
+			caught := models.CaughtMessage{
+				Message:  msg,
+				ObjectID: key,
+				StreamID: "hydrated",
+				CaughtAt: time.Now(),
+			}
+
+			for _, h := range c.handlers {
+				h(caught)
+			}
+			loaded++
+		}
+
+		cursor = nextCursor
+		if cursor == 0 {
+			break
+		}
+	}
+
+	slog.Info("hydration complete", "loaded", loaded)
+	return loaded, nil
 }
 
 // resolveMessage fetches the full message payload from Redis JSON using JSON.GET.
