@@ -1,3 +1,10 @@
+# [0.10.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.9.2...v0.10.0) (2026-04-08)
+
+
+### Features
+
+* clickable banner to reset filters and local favicon ([2923974](https://github.com/stuttgart-things/homerun2-core-catcher/commit/29239745beffebd2df10fbf8e601f290e56828a5)), closes [#44](https://github.com/stuttgart-things/homerun2-core-catcher/issues/44) [#45](https://github.com/stuttgart-things/homerun2-core-catcher/issues/45)
+
 ## [0.9.2](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.9.1...v0.9.2) (2026-04-07)
 
 
