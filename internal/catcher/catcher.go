@@ -29,16 +29,26 @@ type Hydrator interface {
 	HydrateStore(ctx context.Context) (int, error)
 }
 
-// RedisCatcher consumes messages from Redis Streams and resolves full payloads from Redis JSON.
+// RedisCatcher consumes messages from one or more Redis Streams and resolves
+// full payloads from Redis JSON.
 type RedisCatcher struct {
 	consumer    *redisqueue.Consumer
 	redisClient *redis.Client
-	stream      string
+	streams     []string
 	handlers    []MessageHandler
 }
 
-// NewRedisCatcher creates a consumer connected to the given Redis stream.
-func NewRedisCatcher(rc homerun.RedisConfig, groupName, consumerName string, handlers ...MessageHandler) (*RedisCatcher, error) {
+// NewRedisCatcher creates a consumer connected to the given Redis streams.
+// If streams is empty, it falls back to rc.Stream (legacy single-stream mode).
+// A single-element list behaves identically to the legacy configuration.
+func NewRedisCatcher(rc homerun.RedisConfig, streams []string, groupName, consumerName string, handlers ...MessageHandler) (*RedisCatcher, error) {
+	if len(streams) == 0 {
+		if rc.Stream == "" {
+			return nil, fmt.Errorf("no streams configured: pass streams or set rc.Stream")
+		}
+		streams = []string{rc.Stream}
+	}
+
 	if consumerName == "" {
 		hostname, _ := os.Hostname()
 		consumerName = hostname
@@ -68,13 +78,20 @@ func NewRedisCatcher(rc homerun.RedisConfig, groupName, consumerName string, han
 	c := &RedisCatcher{
 		consumer:    consumer,
 		redisClient: redisClient,
-		stream:      rc.Stream,
+		streams:     streams,
 		handlers:    handlers,
 	}
 
-	consumer.Register(rc.Stream, c.handleMessage)
+	for _, stream := range streams {
+		consumer.Register(stream, c.handleMessage)
+	}
 
 	return c, nil
+}
+
+// Streams returns the list of streams this catcher is subscribed to.
+func (c *RedisCatcher) Streams() []string {
+	return c.streams
 }
 
 // Run starts the consumer. Blocks until Shutdown is called.
