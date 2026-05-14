@@ -1,3 +1,10 @@
+# [0.12.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.11.0...v0.12.0) (2026-05-14)
+
+
+### Features
+
+* **ci:** PR-preview workflows (build-pr + kustomize + cleanup + bot) ([82be9f6](https://github.com/stuttgart-things/homerun2-core-catcher/commit/82be9f684b9b5314632024082cae5314d86b376e)), closes [#110](https://github.com/stuttgart-things/homerun2-core-catcher/issues/110) [stuttgart-things/homerun2-omni-pitcher#116](https://github.com/stuttgart-things/homerun2-omni-pitcher/issues/116) [stuttgart-things/homerun2-omni-pitcher#116](https://github.com/stuttgart-things/homerun2-omni-pitcher/issues/116)
+
 # [0.11.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.10.1...v0.11.0) (2026-04-15)
 
 
