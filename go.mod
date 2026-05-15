@@ -6,7 +6,7 @@ require (
 	charm.land/bubbletea/v2 v2.0.6
 	charm.land/lipgloss/v2 v2.0.2
 	github.com/redis/go-redis/v9 v9.19.0
-	github.com/stuttgart-things/homerun-library/v3 v3.0.5
+	github.com/stuttgart-things/homerun-library/v3 v3.1.0
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7
 )
 
@@ -130,7 +130,7 @@ require (
 	github.com/huandu/xstrings v1.3.3 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
-	github.com/jedib0t/go-pretty/v6 v6.7.8 // indirect
+	github.com/jedib0t/go-pretty/v6 v6.7.9 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/kevinburke/ssh_config v1.2.0 // indirect
 	github.com/klauspost/compress v1.18.2 // indirect
