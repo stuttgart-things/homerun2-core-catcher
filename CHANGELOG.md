@@ -1,3 +1,11 @@
+## [0.12.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.12.0...v0.12.1) (2026-05-15)
+
+
+### Bug Fixes
+
+* **deps:** update module charm.land/bubbletea/v2 to v2.0.6 ([5d6f841](https://github.com/stuttgart-things/homerun2-core-catcher/commit/5d6f8413e29ac06ebac5164808f38b435e5ab970))
+* **deps:** update module github.com/redis/go-redis/v9 to v9.19.0 ([0ba5d3e](https://github.com/stuttgart-things/homerun2-core-catcher/commit/0ba5d3e05dbbfba415723bf2bc2e5a931b30fe82))
+
 # [0.12.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.11.0...v0.12.0) (2026-05-14)
 
 
