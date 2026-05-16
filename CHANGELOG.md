@@ -1,3 +1,11 @@
+## [0.12.2](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.12.1...v0.12.2) (2026-05-16)
+
+
+### Bug Fixes
+
+* **deps:** update module charm.land/lipgloss/v2 to v2.0.3 ([9f2b891](https://github.com/stuttgart-things/homerun2-core-catcher/commit/9f2b8913e06e2b0ce83432404a0f89617897628c))
+* **deps:** update module github.com/stuttgart-things/homerun-library/v3 to v3.1.0 ([4bed7f1](https://github.com/stuttgart-things/homerun2-core-catcher/commit/4bed7f1810cc1658618b4f1107f0faa1f1c3a149))
+
 ## [0.12.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.12.0...v0.12.1) (2026-05-15)
 
 
