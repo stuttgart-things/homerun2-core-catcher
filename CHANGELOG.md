@@ -1,3 +1,10 @@
+# [0.13.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.12.2...v0.13.0) (2026-05-16)
+
+
+### Features
+
+* ship HTTPRoute in the kustomize OCI base (Option B for argocd[#116](https://github.com/stuttgart-things/homerun2-core-catcher/issues/116)) ([32a3bcd](https://github.com/stuttgart-things/homerun2-core-catcher/commit/32a3bcd79a49ae3d9a0844b7e6e4f7b53966f4c1)), closes [#59](https://github.com/stuttgart-things/homerun2-core-catcher/issues/59)
+
 ## [0.12.2](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.12.1...v0.12.2) (2026-05-16)
 
 
