@@ -44,7 +44,11 @@ schema CoreCatcher:
     redisPassword: str = ""
 
     # Catcher mode
-    catcherMode: str = "log"
+    # Default "web" so a profile-less render still emits the Service +
+    # HTTPRoute that downstream Flux/ArgoCD consumers expect. The Release
+    # workflow always passes tests/kcl-deploy-profile.yaml (which also sets
+    # web), so this only changes behavior when the profile is bypassed.
+    catcherMode: str = "web"
 
     # Extra environment variables
     extraEnvVars: {str:str} = {}
