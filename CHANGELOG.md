@@ -1,3 +1,10 @@
+## [0.13.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.13.0...v0.13.1) (2026-05-27)
+
+
+### Bug Fixes
+
+* **kcl:** default catcherMode to "web" in schema ([7a32143](https://github.com/stuttgart-things/homerun2-core-catcher/commit/7a3214364dc8120aa49851b8d29dff2edd5b6fd6))
+
 # [0.13.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.12.2...v0.13.0) (2026-05-16)
 
 
