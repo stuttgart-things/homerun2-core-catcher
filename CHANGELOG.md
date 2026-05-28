@@ -1,3 +1,10 @@
+## [0.13.2](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.13.1...v0.13.2) (2026-05-28)
+
+
+### Bug Fixes
+
+* **kcl:** stop emitting Namespace from kustomize OCI ([0ae946f](https://github.com/stuttgart-things/homerun2-core-catcher/commit/0ae946f4284ae3a6e32572093812b501b556bcb3)), closes [#70](https://github.com/stuttgart-things/homerun2-core-catcher/issues/70)
+
 ## [0.13.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.13.0...v0.13.1) (2026-05-27)
 
 
