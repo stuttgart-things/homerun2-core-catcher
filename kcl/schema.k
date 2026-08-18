@@ -10,7 +10,11 @@ schema CoreCatcher:
     namespace: str = "homerun2"
 
     # Image
-    image: str = "ghcr.io/stuttgart-things/homerun2-core-catcher:latest"
+    # Placeholder for local renders only — the Release workflow overrides this
+    # with the released version via kustomize-image-key. Points at :main rather
+    # than :latest because :latest is not maintained and still resolves to
+    # v0.2.0 from March.
+    image: str = "ghcr.io/stuttgart-things/homerun2-core-catcher:main"
     imagePullPolicy: str = "IfNotPresent"
 
     # Replicas and resources

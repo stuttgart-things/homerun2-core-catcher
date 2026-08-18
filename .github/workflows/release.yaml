@@ -20,5 +20,10 @@ jobs:
       push-kustomize: true
       kcl-source-dir: kcl
       kcl-profile-file: tests/kcl-deploy-profile.yaml
+      # Substitutes the released version into config.image so the published
+      # kustomize base pins a real tag. Without this the profile's placeholder
+      # ships verbatim, which meant every release shipped :latest — a tag last
+      # written on 2026-03-08 (#84).
+      kustomize-image-key: config.image
       kustomize-oci-repo: ghcr.io/stuttgart-things/homerun2-core-catcher-kustomize
     secrets: inherit # pragma: allowlist secret
