@@ -7,7 +7,7 @@
 | Workflow | Trigger | Description |
 |----------|---------|-------------|
 | `build-test.yaml` | PR / push to main | Dagger lint + build + test |
-| `build-scan-image.yaml` | PR / push to main | ko build + Trivy scan; PR job tags `pr-<num>-<sha>` for preview envs, main job tags `:main` |
+| `build-scan-image.yaml` | PR / push to main | ko build; both jobs push to `ghcr.io` — PR job tags `pr-<num>-<sha>` + `pr-<num>` for preview envs, main job tags `:main`. No image scan runs yet, despite the workflow name — see [#86](https://github.com/stuttgart-things/homerun2-core-catcher/issues/86) |
 | `release.yaml` | After image build / manual | Semantic release + stage image + push kustomize OCI |
 | `pages.yaml` | After release / manual | Deploy MkDocs to GitHub Pages |
 | `lint-repo.yaml` | PR / push to main | Repository linting |
