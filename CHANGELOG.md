@@ -1,3 +1,11 @@
+## [0.13.5](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.13.4...v0.13.5) (2026-08-18)
+
+
+### Bug Fixes
+
+* **ci:** publish main builds to ghcr.io as :main ([d99806f](https://github.com/stuttgart-things/homerun2-core-catcher/commit/d99806f68855784e90a41fef173ac50b921e8e97)), closes [#86](https://github.com/stuttgart-things/homerun2-core-catcher/issues/86) [#85](https://github.com/stuttgart-things/homerun2-core-catcher/issues/85)
+* **release:** pin a real image tag in the published kustomize base ([6a63148](https://github.com/stuttgart-things/homerun2-core-catcher/commit/6a63148fde5c2983ca956785849ccd5cdef60eee)), closes [#85](https://github.com/stuttgart-things/homerun2-core-catcher/issues/85) [#84](https://github.com/stuttgart-things/homerun2-core-catcher/issues/84)
+
 ## [0.13.4](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.13.3...v0.13.4) (2026-08-18)
 
 
