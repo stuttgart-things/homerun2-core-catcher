@@ -1,3 +1,10 @@
+## [0.13.6](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.13.5...v0.13.6) (2026-08-18)
+
+
+### Bug Fixes
+
+* **release:** re-point ghcr :latest at each release ([c6ae083](https://github.com/stuttgart-things/homerun2-core-catcher/commit/c6ae08390e705797150d8201cd09f644c17f1002)), closes [#84](https://github.com/stuttgart-things/homerun2-core-catcher/issues/84) [stuttgart-things/github-workflow-templates#146](https://github.com/stuttgart-things/github-workflow-templates/issues/146) [#104](https://github.com/stuttgart-things/homerun2-core-catcher/issues/104)
+
 ## [0.13.5](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.13.4...v0.13.5) (2026-08-18)
 
 
