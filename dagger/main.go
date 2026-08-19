@@ -133,9 +133,15 @@ func (m *Dagger) BuildAndTestBinary(
 		Password: "",
 	})
 
+	// The catcher logs "message caught" with the objectId once it has resolved
+	// a stream entry to its RedisJSON payload. That line is the observable
+	// effect this test asserts on - previously it enqueued an ID pointing at a
+	// non-existent object, slept, and declared success regardless (see #108).
 	testCmd := fmt.Sprintf(`
 exec > /app/test-output.log 2>&1
 set -e
+
+OBJ="smoke-$(date +%%s)-core-catcher"
 
 echo "=== Starting catcher binary ==="
 ./%s &
@@ -152,18 +158,29 @@ else
 fi
 
 echo ""
-echo "=== Sending test message to Redis stream ==="
-# Use redis-cli to enqueue a test message directly
+echo "=== Writing message payload and enqueuing it ==="
 apk add --no-cache redis > /dev/null 2>&1
-redis-cli -h redis -p 6379 XADD messages '*' messageID test-msg-001 > /dev/null
-
-echo "Test message sent, waiting for catcher to process..."
-sleep 3
+redis-cli -h redis -p 6379 JSON.SET "$OBJ" . \
+  '{"title":"smoke test","message":"enqueued by build-and-test-binary","severity":"info","author":"dagger","system":"smoke"}' > /dev/null
+redis-cli -h redis -p 6379 XADD messages '*' messageID "$OBJ" > /dev/null
+echo "Enqueued object $OBJ"
 
 echo ""
-echo "=== All tests passed! ==="
+echo "=== Waiting for the catcher to consume it ==="
+for i in $(seq 1 20); do
+  if grep -q "message caught.*$OBJ" /app/test-output.log; then
+    echo "Catcher consumed the message after ${i}s"
+    kill $BIN_PID 2>/dev/null || true
+    echo ""
+    echo "=== All tests passed! ==="
+    exit 0
+  fi
+  sleep 1
+done
+
+echo "Catcher did not consume $OBJ within 20s"
 kill $BIN_PID 2>/dev/null || true
-exit 0
+exit 1
 `, binName)
 
 	result := dag.Container().
