@@ -62,6 +62,15 @@ tasks:
 
   # === Build & Test ===
 
+  test:
+    desc: Run the Go test suite with Redis via Dagger
+    cmds:
+      - |
+        dagger call -m {{ .DAGGER_MODULE_DIR }} \
+        test \
+        --src "{{ .SOURCE_CODE_DIR }}" \
+        --progress plain
+
   build-test-binary:
     desc: Build and test binary with Redis via Dagger
     cmds:
