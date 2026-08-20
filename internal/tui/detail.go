@@ -41,7 +41,7 @@ func (d detailModel) Render(width int) string {
 		{"Assignee", m.AssigneeName},
 		{"Assignee Addr", m.AssigneeAddress},
 		{"Artifacts", m.Artifacts},
-		{"URL", m.Url},
+		{"URL", m.URL},
 	}
 
 	for _, f := range fields {
