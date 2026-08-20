@@ -22,7 +22,7 @@ import (
 	"github.com/stuttgart-things/homerun2-core-catcher/internal/store"
 	"github.com/stuttgart-things/homerun2-core-catcher/internal/tui"
 
-	homerun "github.com/stuttgart-things/homerun-library/v3"
+	homerun "github.com/stuttgart-things/homerun-library/v4"
 )
 
 //go:embed static/*
