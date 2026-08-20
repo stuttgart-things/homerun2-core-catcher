@@ -1,3 +1,24 @@
+# [1.0.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.13.6...v1.0.0) (2026-08-20)
+
+
+* chore(deps)!: migrate to homerun-library v4 ([#115](https://github.com/stuttgart-things/homerun2-core-catcher/issues/115)) ([5385203](https://github.com/stuttgart-things/homerun2-core-catcher/commit/53852037edb97f1a68aa23a195fc22de42a40a52)), closes [homerun-library#103](https://github.com/homerun-library/issues/103)
+
+
+### BREAKING CHANGES
+
+* homerun-library moved to the /v4 module path and renamed
+Message.Url to Message.URL.
+
+- Import path github.com/stuttgart-things/homerun-library/v3 -> /v4.
+- Message.Url -> Message.URL. The JSON tag stays "url", so nothing on the wire,
+  in Redis JSON or in the RediSearch index changes; this is a compile-time
+  rename only.
+
+What v4 brings beyond the rename:
+
+- RediSearch indexes the message's own timestamp instead of the moment of
+  indexing, as a NUMERIC field so range queries are expressible at all
+
 ## [0.13.6](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.13.5...v0.13.6) (2026-08-18)
 
 
