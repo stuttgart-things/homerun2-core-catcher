@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.2...v1.0.3) (2026-09-11)
+
+
+### Bug Fixes
+
+* stop waiting for Redis when a shutdown signal arrives ([e8ea7e2](https://github.com/stuttgart-things/homerun2-core-catcher/commit/e8ea7e2ce909f9647ab67a944694096d3bc18f8b)), closes [#122](https://github.com/stuttgart-things/homerun2-core-catcher/issues/122) [#124](https://github.com/stuttgart-things/homerun2-core-catcher/issues/124)
+
 ## [1.0.2](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.1...v1.0.2) (2026-09-11)
 
 
