@@ -30,11 +30,11 @@ const (
 
 // FilterOptions controls which messages to include.
 type FilterOptions struct {
-	System   string // exact match (empty = all)
-	Severity string // exact match (empty = all)
-	Author   string // exact match (empty = all)
+	System   string        // exact match (empty = all)
+	Severity string        // exact match (empty = all)
+	Author   string        // exact match (empty = all)
 	Since    time.Duration // only messages newer than this (0 = all)
-	Query    string // free-text search across all fields
+	Query    string        // free-text search across all fields
 }
 
 // ListOptions controls pagination, sorting, and filtering.

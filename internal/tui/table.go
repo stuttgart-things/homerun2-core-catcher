@@ -114,18 +114,18 @@ func applySeverityColor(row, severity string, base lipgloss.Style) string {
 
 var (
 	tableHeaderStyle = lipgloss.NewStyle().
-		Bold(true).
-		Foreground(lipgloss.Color("#818cf8")).
-		Background(lipgloss.Color("#0f172a"))
+				Bold(true).
+				Foreground(lipgloss.Color("#818cf8")).
+				Background(lipgloss.Color("#0f172a"))
 
 	rowStyle = lipgloss.NewStyle()
 
 	selectedRowStyle = lipgloss.NewStyle().
-		Background(lipgloss.Color("#4f46e5")).
-		Foreground(lipgloss.Color("#f8fafc")).
-		Bold(true)
+				Background(lipgloss.Color("#4f46e5")).
+				Foreground(lipgloss.Color("#f8fafc")).
+				Bold(true)
 
 	emptyStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#475569")).
-		Italic(true)
+			Foreground(lipgloss.Color("#475569")).
+			Italic(true)
 )
