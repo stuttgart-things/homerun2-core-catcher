@@ -47,6 +47,7 @@ Taskfile.yaml              # Task runner
 | `REDIS_STREAM` | Redis stream to consume from | `messages` |
 | `CONSUMER_GROUP` | Consumer group name | `homerun2-core-catcher` |
 | `CONSUMER_NAME` | Consumer name within the group | hostname |
+| `REDIS_STARTUP_TIMEOUT` | How long startup retries Redis before exiting (Go duration) | `120s` |
 | `LOG_FORMAT` | Log format: `json` or `text` | `json` |
 | `LOG_LEVEL` | Log level: `debug`, `info`, `warn`, `error` | `info` |
 

@@ -107,6 +107,7 @@ Redis Stream ──► RedisCatcher ──┬──► LogHandler (structured sl
 | `REDIS_STREAM` | `messages` | Redis stream to consume from |
 | `CONSUMER_GROUP` | `homerun2-core-catcher` | Consumer group name |
 | `CONSUMER_NAME` | hostname | Consumer name within the group |
+| `REDIS_STARTUP_TIMEOUT` | `120s` | How long startup retries Redis before exiting (Go duration) |
 | `MAX_MESSAGES` | `10000` | Max messages in memory store (cli/web) |
 | `CATCHER_FILE_PATH` | `messages.json` | JSON file path (file backend) |
 | `CATCHER_FILE_INTERVAL` | `1s` | Replay interval (file backend) |

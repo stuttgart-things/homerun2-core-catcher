@@ -89,7 +89,19 @@ func main() {
 		consumerGroup := homerun.GetEnv("CONSUMER_GROUP", "homerun2-core-catcher")
 		consumerName := homerun.GetEnv("CONSUMER_NAME", "")
 
-		var err error
+		// The consumer's preflight dials Redis once. Wait for it first, with
+		// bounded backoff, so a Redis that is still starting does not crashloop
+		// the pod (#117).
+		startupTimeout, err := config.LoadRedisStartupTimeout()
+		if err != nil {
+			slog.Error("invalid configuration", "error", err)
+			os.Exit(1)
+		}
+		if err := catcher.WaitForRedis(redisConfig, startupTimeout); err != nil {
+			slog.Error("redis not reachable", "error", err, "addr", redisConfig.Addr, "port", redisConfig.Port, "startup_timeout", startupTimeout.String())
+			os.Exit(1)
+		}
+
 		c, err = catcher.NewRedisCatcher(redisConfig, streams, consumerGroup, consumerName, msgHandlers...)
 		if err != nil {
 			slog.Error("failed to create catcher", "error", err)
