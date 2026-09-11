@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.0...v1.0.1) (2026-09-11)
+
+
+### Bug Fixes
+
+* check the probe client's Close error (errcheck) ([b664eae](https://github.com/stuttgart-things/homerun2-core-catcher/commit/b664eae94d18c86344be3790dba651e840ccc193))
+* retry Redis at startup instead of crashlooping, bounded by REDIS_STARTUP_TIMEOUT ([f26313a](https://github.com/stuttgart-things/homerun2-core-catcher/commit/f26313aa1b933ef85ff8a5eaf8f005af977e1587)), closes [#117](https://github.com/stuttgart-things/homerun2-core-catcher/issues/117)
+
 # [1.0.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v0.13.6...v1.0.0) (2026-08-20)
 
 
