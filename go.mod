@@ -6,7 +6,7 @@ require (
 	charm.land/bubbletea/v2 v2.0.8
 	charm.land/lipgloss/v2 v2.0.6
 	github.com/redis/go-redis/v9 v9.22.0
-	github.com/stuttgart-things/homerun-library/v4 v4.0.0
+	github.com/stuttgart-things/homerun-library/v4 v4.3.0
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7
 )
 
