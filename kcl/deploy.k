@@ -99,6 +99,20 @@ deployment = {
                                 memory: config.memoryLimit
                             }
                         }
+                        # The HTTP port opens only after Redis answered, which can
+                        # take up to REDIS_STARTUP_TIMEOUT (default 120s). Without
+                        # this, liveness restarted the pod after ~40s of waiting
+                        # (#119). 30 x 5s = 150s; raise it with the timeout.
+                        if config.catcherMode == "web":
+                            startupProbe: {
+                                httpGet: {
+                                    path: "/health"
+                                    port: "http"
+                                }
+                                periodSeconds: 5
+                                timeoutSeconds: 3
+                                failureThreshold: 30
+                            }
                         if config.catcherMode == "web":
                             livenessProbe: {
                                 httpGet: {
