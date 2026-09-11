@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.1...v1.0.2) (2026-09-11)
+
+
+### Bug Fixes
+
+* **kcl:** add a startupProbe so liveness does not kill the pod while it waits for Redis ([04c6bb6](https://github.com/stuttgart-things/homerun2-core-catcher/commit/04c6bb6b92d80f23a63f3fbfee2f6a5e5fc21354)), closes [#119](https://github.com/stuttgart-things/homerun2-core-catcher/issues/119)
+
 ## [1.0.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.0...v1.0.1) (2026-09-11)
 
 
