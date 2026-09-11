@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	viewList   = iota
+	viewList = iota
 	viewDetail
 )
 
@@ -28,19 +28,19 @@ type BuildInfo struct {
 
 // Model is the top-level Bubble Tea model.
 type Model struct {
-	store      *store.MessageStore
-	build      BuildInfo
-	view       int
-	table      tableModel
-	detail     detailModel
-	search     searchModel
-	width      int
-	height     int
-	sortField  store.SortField
-	sortDir    store.SortDirection
-	page       int
-	pageSize   int
-	searching  bool
+	store     *store.MessageStore
+	build     BuildInfo
+	view      int
+	table     tableModel
+	detail    detailModel
+	search    searchModel
+	width     int
+	height    int
+	sortField store.SortField
+	sortDir   store.SortDirection
+	page      int
+	pageSize  int
+	searching bool
 }
 
 // New creates a new TUI model.
@@ -289,23 +289,23 @@ func (m Model) totalPages() int {
 // Styles — indigo/navy palette inspired by clusterbook
 var (
 	titleStyle = lipgloss.NewStyle().
-		Background(lipgloss.Color("#4f46e5")).
-		Foreground(lipgloss.Color("#f8fafc")).
-		Bold(true).
-		Padding(0, 1)
+			Background(lipgloss.Color("#4f46e5")).
+			Foreground(lipgloss.Color("#f8fafc")).
+			Bold(true).
+			Padding(0, 1)
 
 	headerStyle = lipgloss.NewStyle().
-		Background(lipgloss.Color("#1e293b")).
-		Foreground(lipgloss.Color("#94a3b8")).
-		Bold(true)
+			Background(lipgloss.Color("#1e293b")).
+			Foreground(lipgloss.Color("#94a3b8")).
+			Bold(true)
 
 	footerStyle = lipgloss.NewStyle().
-		Background(lipgloss.Color("#1e293b")).
-		Foreground(lipgloss.Color("#64748b"))
+			Background(lipgloss.Color("#1e293b")).
+			Foreground(lipgloss.Color("#64748b"))
 
 	sortInfoStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#64748b"))
+			Foreground(lipgloss.Color("#64748b"))
 
 	searchActiveStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#f97316"))
+				Foreground(lipgloss.Color("#f97316"))
 )

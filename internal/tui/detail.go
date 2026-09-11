@@ -58,9 +58,9 @@ func (d detailModel) Render(width int) string {
 
 var (
 	detailLabelStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#818cf8")).
-		Bold(true)
+				Foreground(lipgloss.Color("#818cf8")).
+				Bold(true)
 
 	detailValueStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#e2e8f0"))
+				Foreground(lipgloss.Color("#e2e8f0"))
 )

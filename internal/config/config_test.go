@@ -8,10 +8,10 @@ import (
 
 func TestParseStreams(t *testing.T) {
 	cases := []struct {
-		name        string
-		streamsEnv  string
-		streamFall  string
-		want        []string
+		name       string
+		streamsEnv string
+		streamFall string
+		want       []string
 	}{
 		{"multi from REDIS_STREAMS", "homerun,releases", "ignored", []string{"homerun", "releases"}},
 		{"whitespace trimmed", " homerun , releases ", "", []string{"homerun", "releases"}},
