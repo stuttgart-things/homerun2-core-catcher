@@ -1,11 +1,9 @@
 package config
 
 import (
-	"fmt"
 	"log/slog"
 	"os"
 	"strings"
-	"time"
 
 	homerun "github.com/stuttgart-things/homerun-library/v4"
 )
@@ -52,35 +50,6 @@ func ParseStreams(streamsEnv, streamFallback string) []string {
 }
 
 // SetupLogging configures slog as the default logger based on LOG_FORMAT and LOG_LEVEL env vars.
-// DefaultRedisStartupTimeout is how long startup waits for Redis to answer.
-// A freshly installed redis-stack took ~70s on labda-dev-a, and core-catcher,
-// with no retry at all then, restarted four times before it was up.
-const DefaultRedisStartupTimeout = 120 * time.Second
-
-// LoadRedisStartupTimeout reads REDIS_STARTUP_TIMEOUT (a Go duration, e.g.
-// "90s" or "2m"). Unset means DefaultRedisStartupTimeout.
-func LoadRedisStartupTimeout() (time.Duration, error) {
-	return ParseRedisStartupTimeout(os.Getenv("REDIS_STARTUP_TIMEOUT"))
-}
-
-// ParseRedisStartupTimeout returns an error for an unparsable or
-// non-positive value rather than falling back: a typo here should fail
-// startup loudly, not quietly restore a budget nobody chose.
-func ParseRedisStartupTimeout(v string) (time.Duration, error) {
-	v = strings.TrimSpace(v)
-	if v == "" {
-		return DefaultRedisStartupTimeout, nil
-	}
-	d, err := time.ParseDuration(v)
-	if err != nil {
-		return 0, fmt.Errorf("REDIS_STARTUP_TIMEOUT %q: %w", v, err)
-	}
-	if d <= 0 {
-		return 0, fmt.Errorf("REDIS_STARTUP_TIMEOUT %q: must be positive", v)
-	}
-	return d, nil
-}
-
 func SetupLogging() {
 	format := strings.ToLower(homerun.GetEnv("LOG_FORMAT", "json"))
 	levelStr := strings.ToLower(homerun.GetEnv("LOG_LEVEL", "info"))
