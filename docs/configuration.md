@@ -12,6 +12,7 @@ All configuration is via environment variables, loaded once at startup.
 | `REDIS_STREAM`   | `messages`                 | Redis stream to consume from         |
 | `CONSUMER_GROUP`| `homerun2-core-catcher`     | Consumer group name                  |
 | `CONSUMER_NAME` | hostname                    | Consumer name within the group       |
+| `REDIS_STARTUP_TIMEOUT` | `120s`              | How long startup retries Redis before exiting (Go duration) |
 | `LOG_FORMAT`     | `json`                     | Log format: `json` or `text`         |
 | `LOG_LEVEL`      | `info`                     | Log level: `debug`, `info`, `warn`, `error` |
 
