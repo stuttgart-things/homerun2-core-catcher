@@ -75,7 +75,7 @@ func WaitForRedis(rc homerun.RedisConfig, timeout time.Duration) error {
 		Addr:     fmt.Sprintf("%s:%s", rc.Addr, rc.Port),
 		Password: rc.Password,
 	})
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
