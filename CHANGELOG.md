@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.4...v1.0.5) (2026-09-20)
+
+
+### Bug Fixes
+
+* **ci:** baue das PR-Image aus dem Head-Commit ([2f7ce48](https://github.com/stuttgart-things/homerun2-core-catcher/commit/2f7ce48fa674ef4677871772a738b514832be9b4)), closes [#129](https://github.com/stuttgart-things/homerun2-core-catcher/issues/129)
+
 ## [1.0.4](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.3...v1.0.4) (2026-09-20)
 
 
