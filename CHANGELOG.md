@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.3...v1.0.4) (2026-09-20)
+
+
+### Bug Fixes
+
+* **ci:** repariere die PR-Preview-Strecke ([10f2e2b](https://github.com/stuttgart-things/homerun2-core-catcher/commit/10f2e2bb5ba2fc2b27bdda6ab13e2b6ad8b159ed)), closes [stuttgart-things/stuttgart-things#3065](https://github.com/stuttgart-things/stuttgart-things/issues/3065) [#127](https://github.com/stuttgart-things/homerun2-core-catcher/issues/127)
+
 ## [1.0.3](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.2...v1.0.3) (2026-09-11)
 
 
