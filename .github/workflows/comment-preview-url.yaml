@@ -20,16 +20,29 @@ jobs:
     # label the AppSet keys on). `reopened`: post only if the PR still
     # has the `preview` label attached — `reopened` doesn't fire a
     # `labeled` event, so we have to check the current label set.
+    #
+    # And only when the org variable HOMERUN2_PREVIEW_DOMAIN names the cluster
+    # previews run on. Unset, the comment would carry an address with no
+    # domain, and a dead link is worse than no link.
     if: |
-      (github.event.action == 'labeled' && github.event.label.name == 'preview') ||
-      (github.event.action == 'reopened' && contains(github.event.pull_request.labels.*.name, 'preview'))
+      vars.HOMERUN2_PREVIEW_DOMAIN != '' && (
+        (github.event.action == 'labeled' && github.event.label.name == 'preview') ||
+        (github.event.action == 'reopened' && contains(github.event.pull_request.labels.*.name, 'preview'))
+      )
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v9
+        env:
+          # The preview cluster is not named here: HOMERUN2_PREVIEW_DOMAIN is an
+          # org variable, so moving previews to another cluster is one value in
+          # the org settings, not a commit in every component repository. The
+          # ApplicationSets take the same domain from the cluster's clusterbook
+          # fqdn annotation (stuttgart-things/argocd platforms/homerun2-pr-preview).
+          PREVIEW_DOMAIN: ${{ vars.HOMERUN2_PREVIEW_DOMAIN }}
         with:
           script: |
             const num = context.issue.number;
-            const url = `https://cc-pr-${num}.homerun2-dev.sthings-vsphere.labul.sva.de`;
+            const url = `https://cc-pr-${num}.${process.env.PREVIEW_DOMAIN}`;
             const ns  = `homerun2-core-catcher-pr-${num}`;
             const marker = "<!-- preview-url-bot -->";
             const body = [
@@ -39,7 +52,7 @@ jobs:
               `| | |`,
               `|--|--|`,
               `| URL | ${url} |`,
-              `| Namespace | \`${ns}\` on \`homerun2-dev\` |`,
+              `| Namespace | \`${ns}\` |`,
               `| ArgoCD | [\`${ns}\`](https://argocd.platform.sthings-vsphere.labul.sva.de/applications?search=${ns}) |`,
               "",
               "Spinning up — give it a couple of minutes for image + kustomize OCI builds to publish and for ArgoCD to sync.",
