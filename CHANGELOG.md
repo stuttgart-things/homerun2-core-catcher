@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.5...v1.0.6) (2026-09-21)
+
+
+### Bug Fixes
+
+* **ci:** nimm die Preview-Domain aus der Org-Variable ([5223b00](https://github.com/stuttgart-things/homerun2-core-catcher/commit/5223b00ba2512c993571d34b26cefc939fa38d54)), closes [#131](https://github.com/stuttgart-things/homerun2-core-catcher/issues/131)
+
 ## [1.0.5](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.4...v1.0.5) (2026-09-20)
 
 
