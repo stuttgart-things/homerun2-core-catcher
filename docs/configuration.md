@@ -13,8 +13,19 @@ All configuration is via environment variables, loaded once at startup.
 | `CONSUMER_GROUP`| `homerun2-core-catcher`     | Consumer group name                  |
 | `CONSUMER_NAME` | hostname                    | Consumer name within the group       |
 | `REDIS_STARTUP_TIMEOUT` | `120s`              | How long startup retries Redis before exiting (Go duration) |
+| `BASE_PATH`      | (empty)                    | Web mode: URL prefix behind a reverse proxy, e.g. `/core` (see below) |
 | `LOG_FORMAT`     | `json`                     | Log format: `json` or `text`         |
 | `LOG_LEVEL`      | `info`                     | Log level: `debug`, `info`, `warn`, `error` |
+
+## Serving Under a Path Prefix
+
+In web mode, `BASE_PATH=/core` serves the UI under `/core/` — for the
+homerun2 portal, which forwards `/core/...` to the service unchanged, or for
+one gateway hostname shared with other services. Every URL in the UI (htmx
+requests, export links, static files) carries the prefix, `/` redirects to
+`/core/`, and `/health` answers at the root as well, so probes need no change.
+The value is normalised (`core/` → `/core`); anything but plain path segments
+fails startup.
 
 ## Consumer Behavior
 

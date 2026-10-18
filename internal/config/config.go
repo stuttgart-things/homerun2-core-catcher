@@ -1,8 +1,10 @@
 package config
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
+	"regexp"
 	"strings"
 
 	homerun "github.com/stuttgart-things/homerun-library/v4"
@@ -47,6 +49,31 @@ func ParseStreams(streamsEnv, streamFallback string) []string {
 		return []string{streamFallback}
 	}
 	return []string{"messages"}
+}
+
+var basePathSegment = regexp.MustCompile(`^[A-Za-z0-9._~-]+$`)
+
+// LoadBasePath reads BASE_PATH: the URL prefix the web UI is served under
+// behind a reverse proxy such as homerun2-portal, e.g. "/core".
+func LoadBasePath() (string, error) {
+	return ParseBasePath(os.Getenv("BASE_PATH"))
+}
+
+// ParseBasePath normalises a base path to a leading slash and no trailing
+// one; empty or "/" is the root. It ends up in every URL of the UI, so it is
+// held to plain path segments, and anything else is an error rather than a
+// guess.
+func ParseBasePath(raw string) (string, error) {
+	value := strings.Trim(strings.TrimSpace(raw), "/")
+	if value == "" {
+		return "", nil
+	}
+	for _, segment := range strings.Split(value, "/") {
+		if !basePathSegment.MatchString(segment) || segment == "." || segment == ".." {
+			return "", fmt.Errorf("BASE_PATH %q: segments may only contain letters, digits and . _ ~ -", raw)
+		}
+	}
+	return "/" + value, nil
 }
 
 // SetupLogging configures slog as the default logger based on LOG_FORMAT and LOG_LEVEL env vars.

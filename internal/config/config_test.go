@@ -29,3 +29,19 @@ func TestParseStreams(t *testing.T) {
 		})
 	}
 }
+
+func TestParseBasePath(t *testing.T) {
+	for raw, want := range map[string]string{
+		"": "", "/": "", " ": "", "/core": "/core", "core/": "/core", "/homerun2/core": "/homerun2/core",
+	} {
+		got, err := ParseBasePath(raw)
+		if err != nil || got != want {
+			t.Errorf("ParseBasePath(%q) = %q, %v; want %q", raw, got, err, want)
+		}
+	}
+	for _, raw := range []string{"/co re", "/core/../x", "/<x>", "/a//b", "/core?x=1"} {
+		if _, err := ParseBasePath(raw); err == nil {
+			t.Errorf("ParseBasePath(%q): want an error", raw)
+		}
+	}
+}

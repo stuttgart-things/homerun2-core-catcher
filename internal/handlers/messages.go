@@ -42,18 +42,19 @@ func init() {
 	templates = template.Must(template.New("").Funcs(funcMap).ParseFS(web.TemplateFS, "templates/*.html"))
 }
 
-// MessagesHandler serves the main dashboard page.
-func MessagesHandler(s *store.MessageStore, info BuildInfo) http.HandlerFunc {
+// MessagesHandler serves the main dashboard page. basePath (BASE_PATH, e.g.
+// "/core") is put in front of every URL the page links to.
+func MessagesHandler(s *store.MessageStore, info BuildInfo, basePath string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		data := buildTableData(s, r, info)
+		data := buildTableData(s, r, info, basePath)
 		_ = templates.ExecuteTemplate(w, "index.html", data)
 	}
 }
 
 // MessagesTableHandler serves the HTMX partial for the message table.
-func MessagesTableHandler(s *store.MessageStore, info BuildInfo) http.HandlerFunc {
+func MessagesTableHandler(s *store.MessageStore, info BuildInfo, basePath string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		data := buildTableData(s, r, info)
+		data := buildTableData(s, r, info, basePath)
 		_ = templates.ExecuteTemplate(w, "table.html", data)
 	}
 }
@@ -98,6 +99,8 @@ type tableData struct {
 	Systems    []string
 	Severities []string
 	Authors    []string
+	// URL prefix behind a reverse proxy; empty at the root
+	BasePath string
 	// Build info
 	Version string
 	Commit  string
@@ -120,7 +123,7 @@ func parseSinceDuration(s string) time.Duration {
 	}
 }
 
-func buildTableData(s *store.MessageStore, r *http.Request, info BuildInfo) tableData {
+func buildTableData(s *store.MessageStore, r *http.Request, info BuildInfo, basePath string) tableData {
 	q := r.URL.Query()
 
 	query := q.Get("q")
@@ -207,6 +210,7 @@ func buildTableData(s *store.MessageStore, r *http.Request, info BuildInfo) tabl
 		Systems:        s.DistinctSystems(),
 		Severities:     s.DistinctSeverities(),
 		Authors:        s.DistinctAuthors(),
+		BasePath:       basePath,
 		Version:        info.Version,
 		Commit:         info.Commit,
 		Date:           info.Date,

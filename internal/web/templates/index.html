@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HOMERUN²</title>
-    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <link rel="icon" type="image/png" href="{{.BasePath}}/static/favicon.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-    <script src="/static/htmx.min.js"></script>
+    <script src="{{.BasePath}}/static/htmx.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root { --pico-font-size: 14px; }
@@ -45,28 +45,28 @@
 <body>
     <div class="header-bar">
         <div>
-            <a href="/" style="text-decoration:none;color:inherit">
+            <a href="{{.BasePath}}/" style="text-decoration:none;color:inherit">
                 <h1>HOMERUN²</h1>
                 <div class="subtitle">message stream dashboard</div>
             </a>
         </div>
         <div class="actions">
-            <a href="/export?format=json">Export JSON</a>
-            <a href="/export?format=csv">Export CSV</a>
+            <a href="{{.BasePath}}/export?format=json">Export JSON</a>
+            <a href="{{.BasePath}}/export?format=csv">Export CSV</a>
         </div>
     </div>
     <main class="container-fluid">
         <div class="controls">
             <input type="search" name="q" placeholder="Search..."
                    value="{{.Query}}"
-                   hx-get="/messages"
+                   hx-get="{{.BasePath}}/messages"
                    hx-trigger="input changed delay:300ms, search"
                    hx-target="#message-table"
                    hx-include=".filter-control"
                    hx-push-url="true">
 
             <select name="system" class="filter-control"
-                    hx-get="/messages"
+                    hx-get="{{.BasePath}}/messages"
                     hx-trigger="change"
                     hx-target="#message-table"
                     hx-include="[name='q'],[name='sort'],[name='dir'],[name='size'],.filter-control">
@@ -77,7 +77,7 @@
             </select>
 
             <select name="severity" class="filter-control"
-                    hx-get="/messages"
+                    hx-get="{{.BasePath}}/messages"
                     hx-trigger="change"
                     hx-target="#message-table"
                     hx-include="[name='q'],[name='sort'],[name='dir'],[name='size'],.filter-control">
@@ -88,7 +88,7 @@
             </select>
 
             <select name="author" class="filter-control"
-                    hx-get="/messages"
+                    hx-get="{{.BasePath}}/messages"
                     hx-trigger="change"
                     hx-target="#message-table"
                     hx-include="[name='q'],[name='sort'],[name='dir'],[name='size'],.filter-control">
@@ -99,7 +99,7 @@
             </select>
 
             <select name="time" class="filter-control"
-                    hx-get="/messages"
+                    hx-get="{{.BasePath}}/messages"
                     hx-trigger="change"
                     hx-target="#message-table"
                     hx-include="[name='q'],[name='sort'],[name='dir'],[name='size'],.filter-control">

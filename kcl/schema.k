@@ -38,6 +38,11 @@ schema CoreCatcher:
     containerPort: int = 8080
 
     # HTTPRoute (Gateway API)
+    # URL prefix behind a reverse proxy, e.g. "/core" for the homerun2 portal
+    # (BASE_PATH, web mode). Empty serves at the root. The HTTPRoute matches it
+    # as is; /health stays at the root for the probes.
+    basePath: str = ""
+
     httpRouteEnabled: bool = False
     httpRouteParentRefName: str = ""
     httpRouteParentRefNamespace: str = ""

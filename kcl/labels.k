@@ -12,6 +12,7 @@ _redisPort = option("config.redisPort")
 _redisStream = option("config.redisStream")
 _consumerGroup = option("config.consumerGroup")
 _redisPassword = option("config.redisPassword")
+_basePath = option("config.basePath")
 _httpRouteEnabled = option("config.httpRouteEnabled")
 _httpRouteParentRefName = option("config.httpRouteParentRefName")
 _httpRouteParentRefNamespace = option("config.httpRouteParentRefNamespace")
@@ -36,6 +37,8 @@ config: schema.CoreCatcher = schema.CoreCatcher {
         consumerGroup = _consumerGroup
     if _redisPassword:
         redisPassword = _redisPassword
+    if _basePath:
+        basePath = _basePath
     if _httpRouteEnabled:
         httpRouteEnabled = _httpRouteEnabled in [True, "True", "true"]
     if _httpRouteParentRefName:

@@ -48,6 +48,7 @@ Taskfile.yaml              # Task runner
 | `CONSUMER_GROUP` | Consumer group name | `homerun2-core-catcher` |
 | `CONSUMER_NAME` | Consumer name within the group | hostname |
 | `REDIS_STARTUP_TIMEOUT` | How long startup retries Redis before exiting (Go duration) | `120s` |
+| `BASE_PATH` | Web mode: URL prefix behind a reverse proxy such as homerun2-portal, e.g. `/core`. Every route and URL of the UI carries it; `/health` stays at the root too | (empty) |
 | `LOG_FORMAT` | Log format: `json` or `text` | `json` |
 | `LOG_LEVEL` | Log level: `debug`, `info`, `warn`, `error` | `info` |
 

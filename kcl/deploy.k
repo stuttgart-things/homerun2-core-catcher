@@ -55,6 +55,11 @@ deployment = {
                                     name: "PORT"
                                     value: str(config.containerPort)
                                 }
+                            if config.catcherMode == "web":
+                                {
+                                    name: "BASE_PATH"
+                                    value: config.basePath
+                                }
                             {
                                 name: "REDIS_ADDR"
                                 value: config.redisAddr

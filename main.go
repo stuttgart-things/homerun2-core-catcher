@@ -165,6 +165,12 @@ func main() {
 		c.Shutdown()
 
 	case "web":
+		basePath, err := config.LoadBasePath()
+		if err != nil {
+			slog.Error("invalid configuration", "error", err)
+			os.Exit(1)
+		}
+
 		// Run catcher in background, HTTP server in foreground
 		go c.Run()
 
@@ -179,25 +185,16 @@ func main() {
 		port := homerun.GetEnv("PORT", "8080")
 		buildInfo := handlers.BuildInfo{Version: version, Commit: commit, Date: date}
 
-		mux := http.NewServeMux()
-		mux.HandleFunc("/", handlers.MessagesHandler(msgStore, buildInfo))
-		mux.HandleFunc("/messages", handlers.MessagesTableHandler(msgStore, buildInfo))
-		mux.HandleFunc("/messages/", handlers.MessageDetailHandler(msgStore))
-		mux.HandleFunc("/export", handlers.ExportHandler(msgStore))
-		mux.HandleFunc("/health", handlers.NewHealthHandler(buildInfo))
-		staticSub, _ := fs.Sub(staticFS, "static")
-		mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(staticSub))))
-
 		srv := &http.Server{
 			Addr:    ":" + port,
-			Handler: mux,
+			Handler: webHandler(msgStore, buildInfo, basePath),
 		}
 
 		quit := make(chan os.Signal, 1)
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
 		go func() {
-			slog.Info("web server starting", "port", port)
+			slog.Info("web server starting", "port", port, "base_path", basePath)
 			if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 				slog.Error("web server error", "error", err)
 				os.Exit(1)
@@ -237,4 +234,28 @@ func main() {
 
 		slog.Info("catcher exited gracefully")
 	}
+}
+
+// webHandler serves the web UI. With a basePath (BASE_PATH, e.g. "/core") it
+// answers under that prefix, as homerun2-portal forwards /core/... unchanged,
+// and every URL in the pages carries it. /health stays at the root as well,
+// for probes and the portal's status check; / redirects to the UI.
+func webHandler(s *store.MessageStore, info handlers.BuildInfo, basePath string) http.Handler {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", handlers.MessagesHandler(s, info, basePath))
+	mux.HandleFunc("/messages", handlers.MessagesTableHandler(s, info, basePath))
+	mux.HandleFunc("/messages/", handlers.MessageDetailHandler(s))
+	mux.HandleFunc("/export", handlers.ExportHandler(s))
+	mux.HandleFunc("/health", handlers.NewHealthHandler(info))
+	staticSub, _ := fs.Sub(staticFS, "static")
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(staticSub))))
+	if basePath == "" {
+		return mux
+	}
+
+	root := http.NewServeMux()
+	root.HandleFunc("/health", handlers.NewHealthHandler(info))
+	root.Handle(basePath+"/", http.StripPrefix(basePath, mux))
+	root.Handle("/{$}", http.RedirectHandler(basePath+"/", http.StatusTemporaryRedirect))
+	return root
 }
