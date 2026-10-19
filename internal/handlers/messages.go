@@ -42,18 +42,19 @@ func init() {
 	templates = template.Must(template.New("").Funcs(funcMap).ParseFS(web.TemplateFS, "templates/*.html"))
 }
 
-// MessagesHandler serves the main dashboard page.
-func MessagesHandler(s *store.MessageStore, info BuildInfo) http.HandlerFunc {
+// MessagesHandler serves the main dashboard page. basePath (BASE_PATH, e.g.
+// "/core") goes in front of every URL the page hands to the browser.
+func MessagesHandler(s *store.MessageStore, info BuildInfo, basePath string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		data := buildTableData(s, r, info)
+		data := buildTableData(s, r, info, basePath)
 		_ = templates.ExecuteTemplate(w, "index.html", data)
 	}
 }
 
 // MessagesTableHandler serves the HTMX partial for the message table.
-func MessagesTableHandler(s *store.MessageStore, info BuildInfo) http.HandlerFunc {
+func MessagesTableHandler(s *store.MessageStore, info BuildInfo, basePath string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		data := buildTableData(s, r, info)
+		data := buildTableData(s, r, info, basePath)
 		_ = templates.ExecuteTemplate(w, "table.html", data)
 	}
 }
@@ -102,6 +103,8 @@ type tableData struct {
 	Version string
 	Commit  string
 	Date    string
+	// URL prefix for every link and hx-get, "" at the root
+	BasePath string
 }
 
 // parseSinceDuration converts a time filter string to a duration.
@@ -120,7 +123,7 @@ func parseSinceDuration(s string) time.Duration {
 	}
 }
 
-func buildTableData(s *store.MessageStore, r *http.Request, info BuildInfo) tableData {
+func buildTableData(s *store.MessageStore, r *http.Request, info BuildInfo, basePath string) tableData {
 	q := r.URL.Query()
 
 	query := q.Get("q")
@@ -210,5 +213,6 @@ func buildTableData(s *store.MessageStore, r *http.Request, info BuildInfo) tabl
 		Version:        info.Version,
 		Commit:         info.Commit,
 		Date:           info.Date,
+		BasePath:       basePath,
 	}
 }

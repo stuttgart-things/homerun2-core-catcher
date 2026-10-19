@@ -18,6 +18,7 @@ _httpRouteParentRefNamespace = option("config.httpRouteParentRefNamespace")
 _httpRouteHostname = option("config.httpRouteHostname")
 _httpRouteAnnotations = option("config.httpRouteAnnotations") or {}
 _catcherMode = option("config.catcherMode")
+_basePath = option("config.basePath")
 _extraEnvVars = option("config.extraEnvVars") or {}
 
 # Config instance with command-line overrides
@@ -48,6 +49,8 @@ config: schema.CoreCatcher = schema.CoreCatcher {
         httpRouteAnnotations = _httpRouteAnnotations
     if _catcherMode:
         catcherMode = _catcherMode
+    if _basePath:
+        basePath = _basePath
     if _extraEnvVars:
         extraEnvVars = _extraEnvVars
 }

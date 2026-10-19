@@ -54,6 +54,11 @@ schema CoreCatcher:
     # web), so this only changes behavior when the profile is bypassed.
     catcherMode: str = "web"
 
+    # URL prefix of the web UI behind a reverse proxy, e.g. "/core" behind
+    # homerun2-portal (BASE_PATH). Empty serves at the root. The HTTPRoute
+    # matches it as is; /health stays at the root for the probes.
+    basePath: str = ""
+
     # Extra environment variables
     extraEnvVars: {str:str} = {}
 

@@ -29,3 +29,32 @@ func TestParseStreams(t *testing.T) {
 		})
 	}
 }
+
+func TestParseBasePath(t *testing.T) {
+	cases := []struct {
+		in      string
+		want    string
+		wantErr bool
+	}{
+		{"", "", false},
+		{"/", "", false},
+		{"/core", "/core", false},
+		{"core", "/core", false},
+		{"/core/", "/core", false},
+		{" /homerun/core ", "/homerun/core", false},
+		{"/a//b", "", true},
+		{"/../core", "", true},
+		{"/core\"><script>", "", true},
+		{"/core?x=1", "", true},
+	}
+	for _, tc := range cases {
+		got, err := ParseBasePath(tc.in)
+		if (err != nil) != tc.wantErr {
+			t.Errorf("ParseBasePath(%q) error = %v, wantErr %v", tc.in, err, tc.wantErr)
+			continue
+		}
+		if got != tc.want {
+			t.Errorf("ParseBasePath(%q) = %q, want %q", tc.in, got, tc.want)
+		}
+	}
+}

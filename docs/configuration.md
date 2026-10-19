@@ -13,6 +13,7 @@ All configuration is via environment variables, loaded once at startup.
 | `CONSUMER_GROUP`| `homerun2-core-catcher`     | Consumer group name                  |
 | `CONSUMER_NAME` | hostname                    | Consumer name within the group       |
 | `REDIS_STARTUP_TIMEOUT` | `120s`              | How long startup retries Redis before exiting (Go duration) |
+| `BASE_PATH`     | *(empty)*                  | URL prefix of the web UI behind a reverse proxy, e.g. `/core` behind homerun2-portal; `/health` stays at the root (web mode) |
 | `LOG_FORMAT`     | `json`                     | Log format: `json` or `text`         |
 | `LOG_LEVEL`      | `info`                     | Log level: `debug`, `info`, `warn`, `error` |
 
