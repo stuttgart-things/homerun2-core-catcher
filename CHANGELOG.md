@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.6...v1.1.0) (2026-10-19)
+
+
+### Features
+
+* serve under a BASE_PATH prefix behind homerun2-portal ([54bd145](https://github.com/stuttgart-things/homerun2-core-catcher/commit/54bd145d8b9bee5638bbbde090cdb9b14a7c7aaa)), closes [#135](https://github.com/stuttgart-things/homerun2-core-catcher/issues/135)
+
 ## [1.0.6](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.0.5...v1.0.6) (2026-09-21)
 
 
