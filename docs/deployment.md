@@ -40,6 +40,7 @@ config.redisPort: "6379"
 config.redisStream: messages
 config.consumerGroup: homerun2-core-catcher
 config.redisPassword: my-secret-password
+config.basePath: /core   # web mode: serve under /core/ (BASE_PATH, HTTPRoute PathPrefix)
 ```
 
 ## Deploy to Cluster

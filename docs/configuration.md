@@ -17,6 +17,23 @@ All configuration is via environment variables, loaded once at startup.
 | `LOG_FORMAT`     | `json`                     | Log format: `json` or `text`         |
 | `LOG_LEVEL`      | `info`                     | Log level: `debug`, `info`, `warn`, `error` |
 
+## Serving Under a Path Prefix
+
+In web mode, `BASE_PATH=/core` serves the dashboard under `/core/`: for
+[homerun2-portal](https://github.com/stuttgart-things/homerun2-portal), which
+forwards `/core/...` to the service unchanged, or for one gateway hostname
+shared with other services.
+
+- Every URL the dashboard hands to the browser (htmx requests, export links,
+  static files) carries the prefix.
+- `/` and `/core` redirect to `/core/`.
+- `/health` answers at the root as well, so the probes and the portal's
+  status check need no prefix.
+- The value is normalised (`core/` → `/core`, `/` → root). Anything but plain
+  path segments (letters, digits, `.` `_` `~` `-`) fails startup.
+- In Kubernetes, `config.basePath` sets `BASE_PATH` and the HTTPRoute's
+  `PathPrefix` (see [Deployment](deployment.md)).
+
 ## Consumer Behavior
 
 The catcher uses Redis consumer groups (`XREADGROUP`) to ensure reliable message delivery:
