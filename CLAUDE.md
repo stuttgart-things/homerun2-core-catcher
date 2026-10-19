@@ -84,6 +84,7 @@ Redis Stream ──► RedisCatcher ──┬──► LogHandler (structured sl
 - `internal/catcher/handlers.go` — LogHandler, StoreHandler, severity mapping
 - `internal/store/store.go` — thread-safe in-memory MessageStore
 - `internal/models/models.go` — CaughtMessage struct
+- `internal/handlers/fragments.go` — `/ui/manifest.json` and `/ui/fragment/messages` for homerun2-portal: bare HTML styled by the portal's `hr-*` classes, every URL carries `BASE_PATH`
 - `internal/tui/` — Bubble Tea TUI (app, table, search, detail)
 - `internal/config/` — env-based config loading
 - `internal/banner/` — animated TUI startup banner
