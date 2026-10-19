@@ -108,6 +108,7 @@ Redis Stream ──► RedisCatcher ──┬──► LogHandler (structured sl
 | `CONSUMER_GROUP` | `homerun2-core-catcher` | Consumer group name |
 | `CONSUMER_NAME` | hostname | Consumer name within the group |
 | `REDIS_STARTUP_TIMEOUT` | `120s` | How long startup retries Redis before exiting (Go duration) |
+| `BASE_PATH` | *(empty)* | URL prefix of the web UI behind a reverse proxy, e.g. `/core` behind homerun2-portal; `/health` stays at the root (web) |
 | `MAX_MESSAGES` | `10000` | Max messages in memory store (cli/web) |
 | `CATCHER_FILE_PATH` | `messages.json` | JSON file path (file backend) |
 | `CATCHER_FILE_INTERVAL` | `1s` | Replay interval (file backend) |

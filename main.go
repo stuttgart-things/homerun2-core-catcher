@@ -165,6 +165,12 @@ func main() {
 		c.Shutdown()
 
 	case "web":
+		basePath, err := config.LoadBasePath()
+		if err != nil {
+			slog.Error("invalid configuration", "error", err)
+			os.Exit(1)
+		}
+
 		// Run catcher in background, HTTP server in foreground
 		go c.Run()
 
@@ -179,25 +185,27 @@ func main() {
 		port := homerun.GetEnv("PORT", "8080")
 		buildInfo := handlers.BuildInfo{Version: version, Commit: commit, Date: date}
 
+		health := handlers.NewHealthHandler(buildInfo)
+
 		mux := http.NewServeMux()
-		mux.HandleFunc("/", handlers.MessagesHandler(msgStore, buildInfo))
-		mux.HandleFunc("/messages", handlers.MessagesTableHandler(msgStore, buildInfo))
+		mux.HandleFunc("/", handlers.MessagesHandler(msgStore, buildInfo, basePath))
+		mux.HandleFunc("/messages", handlers.MessagesTableHandler(msgStore, buildInfo, basePath))
 		mux.HandleFunc("/messages/", handlers.MessageDetailHandler(msgStore))
 		mux.HandleFunc("/export", handlers.ExportHandler(msgStore))
-		mux.HandleFunc("/health", handlers.NewHealthHandler(buildInfo))
+		mux.HandleFunc("/health", health)
 		staticSub, _ := fs.Sub(staticFS, "static")
 		mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(staticSub))))
 
 		srv := &http.Server{
 			Addr:    ":" + port,
-			Handler: mux,
+			Handler: handlers.Mount(basePath, mux, health),
 		}
 
 		quit := make(chan os.Signal, 1)
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
 		go func() {
-			slog.Info("web server starting", "port", port)
+			slog.Info("web server starting", "port", port, "base_path", basePath)
 			if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 				slog.Error("web server error", "error", err)
 				os.Exit(1)
