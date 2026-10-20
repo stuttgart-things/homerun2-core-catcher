@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.2.0...v1.3.0) (2026-10-20)
+
+
+### Features
+
+* homerun2 design tokens and the compact header in the portal ([508d3bc](https://github.com/stuttgart-things/homerun2-core-catcher/commit/508d3bc35c642e4609b41bc6f06919065f92492a))
+
 # [1.2.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.1.1...v1.2.0) (2026-10-20)
 
 
