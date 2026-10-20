@@ -192,6 +192,8 @@ func main() {
 		mux.HandleFunc("/messages", handlers.MessagesTableHandler(msgStore, buildInfo, basePath))
 		mux.HandleFunc("/messages/", handlers.MessageDetailHandler(msgStore))
 		mux.HandleFunc("/export", handlers.ExportHandler(msgStore))
+		mux.HandleFunc("/ui/manifest.json", handlers.ManifestHandler(buildInfo, basePath))
+		mux.HandleFunc("/ui/fragment/messages", handlers.MessagesFragmentHandler(msgStore, basePath))
 		mux.HandleFunc("/health", health)
 		staticSub, _ := fs.Sub(staticFS, "static")
 		mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(staticSub))))
