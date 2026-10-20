@@ -47,6 +47,7 @@ func init() {
 func MessagesHandler(s *store.MessageStore, info BuildInfo, basePath string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		data := buildTableData(s, r, info, basePath)
+		data.PortalTheme = r.Header.Get("X-Forwarded-Prefix") != ""
 		_ = templates.ExecuteTemplate(w, "index.html", data)
 	}
 }
@@ -105,6 +106,9 @@ type tableData struct {
 	Date    string
 	// URL prefix for every link and hx-get, "" at the root
 	BasePath string
+	// PortalTheme links homerun2-portal's design tokens: the request came
+	// through the portal, which sets X-Forwarded-Prefix.
+	PortalTheme bool
 }
 
 // parseSinceDuration converts a time filter string to a duration.
