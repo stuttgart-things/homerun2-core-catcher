@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.1.1...v1.2.0) (2026-10-20)
+
+
+### Features
+
+* offer the latest messages as a homerun2-portal fragment ([d22f4aa](https://github.com/stuttgart-things/homerun2-core-catcher/commit/d22f4aa45ef29c92c0d46261342017ea7649d9cb))
+
 ## [1.1.1](https://github.com/stuttgart-things/homerun2-core-catcher/compare/v1.1.0...v1.1.1) (2026-10-19)
 
 
